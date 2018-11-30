@@ -1,0 +1,30 @@
+:host {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-header {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.page-header>* {
+    width: 100%;
+}
+
+.content-container {
+    height: 100%;
+    overflow: auto
+}
+
+.page-footer {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.page-footer>* {
+    width: 100%;
+}
