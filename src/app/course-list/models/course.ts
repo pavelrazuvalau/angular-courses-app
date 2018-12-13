@@ -5,3 +5,8 @@ export interface Course {
   duration: number;
   description: string;
 }
+
+export interface CourseResponse {
+  courses: Course[];
+  hasMoreCourses: boolean;
+}

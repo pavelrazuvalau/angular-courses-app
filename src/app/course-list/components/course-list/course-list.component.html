@@ -1,14 +1,25 @@
 <section class="course-toolbar">
-  <div>
-      <input type="text">
-      <!-- I'd use directive for buttons -->
-      <button>Search</button>
+  <div class="course-toolbar__search">
+    <form autocomplete="off" (submit)="find()">
+      <mat-form-field>
+        <input matInput [(ngModel)]="searchCriteria" name="searchCriteria">
+      </mat-form-field>
+      <button type="submit" mat-raised-button>Search</button>
+    </form>
   </div>
 
-  <button>Add course</button>
+  <button mat-raised-button (click)="addCourse()">
+    <mat-icon>add</mat-icon>
+    Add course
+  </button>
 </section>
 
 <section class="course-list" *ngIf="courses">
-  <app-course-list-item *ngFor="let course of courses" [course]="course"></app-course-list-item>
-  <button>Load more</button>
+  <app-course-list-item
+    *ngFor="let course of courses"
+    [course]="course"
+    (edit)="editCourse($event)"
+    (remove)="removeCourse($event)">
+  </app-course-list-item>
+  <button mat-raised-button *ngIf="hasMoreCourses" (click)="loadMore()">Load more</button>
 </section>
