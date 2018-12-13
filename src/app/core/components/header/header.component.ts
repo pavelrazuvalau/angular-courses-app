@@ -4,7 +4,7 @@ import { User } from '../../models/user';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   user: User;
@@ -14,6 +14,6 @@ export class HeaderComponent {
   }
 
   logout() {
-    // some magic stuff here
+    console.log('logging out');
   }
 }

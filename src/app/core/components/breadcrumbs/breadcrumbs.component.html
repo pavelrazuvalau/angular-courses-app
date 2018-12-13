@@ -1,3 +1,10 @@
-<p>
-  breadcrumbs works!
-</p>
+<mat-toolbar>
+  <span class="breadcrumbs__item" *ngFor="let item of segments; let last = last">
+    <a [routerLink]="[]">
+      {{item}}
+    </a>
+    <span *ngIf="!last">
+      /
+    </span>
+  </span>
+</mat-toolbar>

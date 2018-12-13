@@ -1,3 +1,28 @@
-<p>
-  course-list-item works!
-</p>
+<mat-card class="course-item">
+  <section class="course-item__content">
+    <header class="card-header">
+      <h2 class="card-header__title">{{course.title}}</h2>
+      <div class="card-header__info">
+        <div class="card-header__info__duration">
+          {{course.duration | minutesToTime}}
+        </div>
+        <div class="card-header__info__date">
+          {{course.creationDate | date : 'longDate'}}
+        </div>
+      </div>
+    </header>
+    <main>
+      {{course.description}}
+    </main>
+  </section>
+  <aside class="course-item__actions">
+    <button mat-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    <button mat-button color="warn" (click)="onRemove()">
+      <mat-icon>remove</mat-icon>
+      Delete
+    </button>
+  </aside>
+</mat-card>

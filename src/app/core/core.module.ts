@@ -1,5 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CourseListModule } from '../course-list/course-list.module';
@@ -16,7 +21,10 @@ const COMPONENTS = [
 @NgModule({
   imports: [
     CommonModule,
-    CourseListModule
+    CourseListModule,
+    RouterModule,
+    MatButtonModule,
+    MatToolbarModule,
   ],
   declarations: [
     ...COMPONENTS,

@@ -1,8 +1,10 @@
 <header>
-  <app-logo></app-logo>
+  <a class="logo" [routerLink]="['/']">
+    <app-logo></app-logo>
+  </a>
 
-  <div>
-    <span>User Login</span>
-    <button>Log off</button>
+  <div class="user-controls">
+    <span class="user-controls__label">User Login</span>
+    <button mat-raised-button (click)="logout()" >Log off</button>
   </div>
 </header>
