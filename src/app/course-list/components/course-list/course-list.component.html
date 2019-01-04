@@ -8,10 +8,12 @@
     </form>
   </div>
 
-  <button mat-raised-button (click)="addCourse()">
-    <mat-icon>add</mat-icon>
-    Add course
-  </button>
+  <div class="course-toolbar__add-course">
+    <button mat-raised-button (click)="addCourse()">
+      <mat-icon>add</mat-icon>
+      Add course
+    </button>
+  </div>
 </section>
 
 <section class="course-list" *ngIf="courses">
@@ -21,5 +23,5 @@
     (edit)="editCourse($event)"
     (remove)="removeCourse($event)">
   </app-course-list-item>
-  <button mat-raised-button *ngIf="hasMoreCourses" (click)="loadMore()">Load more</button>
+  <button class="course-list__load-more" mat-raised-button *ngIf="hasMoreCourses" (click)="loadMore()">Load more</button>
 </section>

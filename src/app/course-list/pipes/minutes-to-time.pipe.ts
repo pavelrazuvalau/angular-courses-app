@@ -12,7 +12,7 @@ export class MinutesToTimePipe implements PipeTransform {
     const hoursString = hours ? `${hours} h` : '';
     const minutesString = minutes ? `${minutes} min` : '';
 
-    return `${hoursString} ${minutesString}`;
+    return [hoursString, minutesString].filter((str) => str).join(' ');
   }
 
 }
