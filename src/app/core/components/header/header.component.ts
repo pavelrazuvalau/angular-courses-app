@@ -9,10 +9,6 @@ import { User } from '../../models/user';
 export class HeaderComponent {
   user: User;
 
-  login() {
-    // some magic stuff here
-  }
-
   logout() {
     console.log('logging out');
   }

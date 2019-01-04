@@ -11,16 +11,16 @@
         </div>
       </div>
     </header>
-    <main>
+    <main class="course-item__content__desctiption">
       {{course.description}}
     </main>
   </section>
   <aside class="course-item__actions">
-    <button mat-button color="primary" (click)="onEdit()">
+    <button class="course-item__actions__edit" mat-button color="primary" (click)="onEdit()">
       <mat-icon>edit</mat-icon>
       Edit
     </button>
-    <button mat-button color="warn" (click)="onRemove()">
+    <button class="course-item__actions__remove" mat-button color="warn" (click)="onRemove()">
       <mat-icon>remove</mat-icon>
       Delete
     </button>
