@@ -1,6 +1,11 @@
 .course-item {
   display: flex;
   justify-content: space-between;
+  margin: 5px 0;
+
+  &--top-rated {
+    background-color: #dee2e5;
+  }
 
   &__content {
     width: calc(100% - 120px);
@@ -12,7 +17,13 @@
       &__title {
         margin: 0;
         font-weight: 500;
-        font-size: 26px;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          margin-left: 5px;
+        }
       }
 
       &__info {

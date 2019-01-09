@@ -9,6 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MinutesToTimePipe } from './pipes/minutes-to-time.pipe';
+import { CreationDateStatusDirective } from './directives/creation-date-status.directive';
+import { FilterByPipe } from './pipes/filter-by.pipe';
+import { OrderByPipe } from './pipes/order-by.pipe';
 
 @NgModule({
   imports: [
@@ -19,6 +22,16 @@ import { MinutesToTimePipe } from './pipes/minutes-to-time.pipe';
     MatCardModule,
     MatIconModule,
   ],
-  declarations: [CourseListComponent, CourseListItemComponent, MinutesToTimePipe]
+  declarations: [
+    CourseListComponent,
+    CourseListItemComponent,
+    MinutesToTimePipe,
+    CreationDateStatusDirective,
+    FilterByPipe,
+    OrderByPipe
+  ],
+  providers: [
+    FilterByPipe
+  ]
 })
 export class CourseListModule { }

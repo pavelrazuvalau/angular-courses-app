@@ -4,6 +4,7 @@ export interface Course {
   creationDate: string;
   duration: number;
   description: string;
+  topRated?: boolean;
 }
 
 export interface CourseResponse {

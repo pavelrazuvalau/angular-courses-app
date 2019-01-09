@@ -11,6 +11,9 @@ import { of } from 'rxjs';
 import { CourseListComponent } from './course-list.component';
 import { CourseService } from './../../services/course.service';
 import { Course, CourseResponse } from './../../models/course';
+import { CreationDateStatusDirective } from '../../directives/creation-date-status.directive';
+import { FilterByPipe } from '../../pipes/filter-by.pipe';
+import { OrderByPipe } from '../../pipes/order-by.pipe';
 
 const mockCourse = {
   id: 1,
@@ -23,6 +26,7 @@ const mockCourse = {
 @Component({
   selector: 'app-course-list-item',
   template: `
+    <h1 class="course-title-stub">{{mockCourse.title}}</h1>
     <button class="edit-stub" (click)="edit.emit(mockCourse)"></button>
     <button class="remove-stub" (click)="remove.emit(mockCourse)"></button>
   `
@@ -40,13 +44,7 @@ describe('CourseListComponent', () => {
 
   const mockCourses: CourseResponse = {
     courses: [
-      {
-        id: 1,
-        title: 'Title 1',
-        creationDate: '2018-05-09',
-        duration: 34,
-        description: 'Description 1'
-      },
+      mockCourse,
       {
         id: 2,
         title: 'Title 2',
@@ -64,9 +62,15 @@ describe('CourseListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CourseListComponent, CourseListItemStubComponent ],
+      declarations: [
+        CourseListComponent,
+        CourseListItemStubComponent,
+        CreationDateStatusDirective,
+        FilterByPipe,
+        OrderByPipe
+      ],
       imports: [ MatButtonModule, MatIconModule, MatInputModule, FormsModule, NoopAnimationsModule ],
-      providers: [{ provide: CourseService, useValue: mockService }]
+      providers: [{ provide: CourseService, useValue: mockService }, FilterByPipe]
     })
     .compileComponents();
   }));
@@ -114,11 +118,15 @@ describe('CourseListComponent', () => {
 
   describe('#find', () => {
     it('should search courses', () => {
-      component.searchCriteria = 'Video 1';
+      component.searchCriteria = mockCourse.title;
       fixture.detectChanges();
       const form = fixture.debugElement.query(By.css('.course-toolbar__search form'));
       form.triggerEventHandler('submit', null);
-      expect(console.log).toHaveBeenCalledWith('searching', component.searchCriteria);
+      fixture.detectChanges();
+      const items = fixture.debugElement.queryAll(By.css('.course-title-stub'));
+      const filteredItems = mockCourses.courses.filter((course) => course.title.toLowerCase().includes(component.searchCriteria));
+      const foundTitles = items.map((item) => item.nativeElement.innerText);
+      expect(foundTitles).toEqual(filteredItems.map((item) => item.title));
     });
   });
 
