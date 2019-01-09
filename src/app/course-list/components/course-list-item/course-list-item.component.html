@@ -1,13 +1,19 @@
-<mat-card class="course-item">
+<mat-card class="course-item"
+  appCreationDateStatus
+  [creationDateString]="course.creationDate"
+  [ngClass]="{ 'course-item--top-rated': course.topRated }">
   <section class="course-item__content">
     <header class="card-header">
-      <h2 class="card-header__title">{{course.title}}</h2>
+      <h2 class="card-header__title">
+        <span>{{course.title | uppercase}}</span>
+        <mat-icon *ngIf="course.topRated">star_rate</mat-icon>
+      </h2>
       <div class="card-header__info">
         <div class="card-header__info__duration">
           {{course.duration | minutesToTime}}
         </div>
         <div class="card-header__info__date">
-          {{course.creationDate | date : 'longDate'}}
+          {{course.creationDate | date : 'MM.dd.yyyy'}}
         </div>
       </div>
     </header>

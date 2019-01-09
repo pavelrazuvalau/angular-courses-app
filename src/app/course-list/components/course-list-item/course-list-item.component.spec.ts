@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MinutesToTimePipe } from '../../pipes/minutes-to-time.pipe';
 import { CourseListItemComponent } from './course-list-item.component';
+import { CreationDateStatusDirective } from '../../directives/creation-date-status.directive';
 
 @Component({
   template: `
@@ -32,7 +33,7 @@ describe('CourseListItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CourseListItemComponent, MinutesToTimePipe, TestHostComponent ],
+      declarations: [ CourseListItemComponent, MinutesToTimePipe, TestHostComponent, CreationDateStatusDirective ],
       imports: [ MatCardModule, MatButtonModule, MatIconModule ],
     })
     .compileComponents();
@@ -46,7 +47,7 @@ describe('CourseListItemComponent', () => {
 
   it('should contain course title info', () => {
     const element = fixture.debugElement.query(By.css('.card-header__title'));
-    expect(element.nativeElement.innerText).toContain(testHost.course.title);
+    expect(element.nativeElement.innerText).toContain(testHost.course.title.toUpperCase());
   });
 
   it('should contain course duration info', () => {
@@ -58,7 +59,7 @@ describe('CourseListItemComponent', () => {
   it('should contain course creation date info', () => {
     const datePipe = new DatePipe('en-US');
     const element = fixture.debugElement.query(By.css('.card-header__info__date'));
-    expect(element.nativeElement.innerText).toContain(datePipe.transform(testHost.course.creationDate));
+    expect(element.nativeElement.innerText).toContain(datePipe.transform(testHost.course.creationDate, 'MM.dd.yyyy'));
   });
 
   it('should contain course description info', () => {
