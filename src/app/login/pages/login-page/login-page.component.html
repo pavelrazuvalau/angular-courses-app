@@ -1,6 +1,6 @@
 <mat-card>
   <h2>Login</h2>
-  <form autocomplete="off" (submit)="login()">
+  <form autocomplete="off" #loginForm="ngForm" (submit)="loginForm.valid && login()">
     <mat-form-field>
       <input matInput [(ngModel)]="userName" placeholder="Username" name="userName" required>
     </mat-form-field>

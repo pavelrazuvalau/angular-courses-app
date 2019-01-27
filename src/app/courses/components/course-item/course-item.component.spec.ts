@@ -5,9 +5,9 @@ import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MinutesToTimePipe } from '../../pipes/minutes-to-time.pipe';
-import { CourseListItemComponent } from './course-list-item.component';
-import { CreationDateStatusDirective } from '../../directives/creation-date-status.directive';
+import { MinutesToTimePipe } from '../../../courses/pipes/minutes-to-time.pipe';
+import { CourseItemComponent } from './course-item.component';
+import { CreationDateStatusDirective } from '../../../courses/directives/creation-date-status.directive';
 
 @Component({
   template: `
@@ -27,13 +27,13 @@ class TestHostComponent {
   };
 }
 
-describe('CourseListItemComponent', () => {
+describe('CourseItemComponent', () => {
   let testHost: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CourseListItemComponent, MinutesToTimePipe, TestHostComponent, CreationDateStatusDirective ],
+      declarations: [ CourseItemComponent, MinutesToTimePipe, TestHostComponent, CreationDateStatusDirective ],
       imports: [ MatCardModule, MatButtonModule, MatIconModule ],
     })
     .compileComponents();

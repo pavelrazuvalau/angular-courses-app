@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Course } from '../../models/course';
-import { CourseService } from '../../services/course.service';
-import { FilterByPipe } from '../../pipes/filter-by.pipe';
+import { Course } from '../../../courses/models/course';
+import { CourseService } from '../../../courses/services/course.service';
+import { FilterByPipe } from '../../../courses/pipes/filter-by.pipe';
 import { MatDialog } from '@angular/material';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-course-list',
-  templateUrl: './course-list.component.html',
-  styleUrls: ['./course-list.component.scss']
+  templateUrl: './course-list-page.component.html',
+  styleUrls: ['./course-list-page.component.scss']
 })
-export class CourseListComponent implements OnInit {
+export class CourseListPageComponent implements OnInit {
   courses: Course[];
   filteredCourses: Course[];
   hasMoreCourses: boolean;
@@ -28,10 +28,6 @@ export class CourseListComponent implements OnInit {
 
   filter() {
     this.filteredCourses = this.filterByPipe.transform(this.courses, 'title', this.searchCriteria);
-  }
-
-  addCourse() {
-    this.courseService.createCourse();
   }
 
   loadMore() {

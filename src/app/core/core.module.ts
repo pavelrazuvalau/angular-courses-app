@@ -7,7 +7,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { CourseListModule } from '../course-list/course-list.module';
+import { CoursesModule } from '../courses/courses.module';
 import { LogoComponent } from './components/logo/logo.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 

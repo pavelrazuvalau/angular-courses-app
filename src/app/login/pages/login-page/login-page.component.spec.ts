@@ -3,7 +3,7 @@ import { ROUTES } from 'src/app/app.routes';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { LoginComponent } from './login.component';
+import { LoginPageComponent } from './login-page.component';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -12,13 +12,13 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CourseListModule } from 'src/app/course-list/course-list.module';
+import { CoursesModule } from 'src/app/courses/courses.module';
 import { NgModuleFactoryLoader } from '@angular/core';
 import { userMock } from 'src/app/core/services/user-mock';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('LoginPageComponent', () => {
+  let component: LoginPageComponent;
+  let fixture: ComponentFixture<LoginPageComponent>;
   let router: Router;
   let location: Location;
   let mockAuthService;
@@ -29,7 +29,7 @@ describe('LoginComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
+      declarations: [ LoginPageComponent ],
       imports: [
         MatInputModule,
         FormsModule,
@@ -48,11 +48,11 @@ describe('LoginComponent', () => {
     router = TestBed.get(Router);
     location = TestBed.get(Location);
 
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(LoginPageComponent);
     component = fixture.componentInstance;
 
     const loader = TestBed.get(NgModuleFactoryLoader);
-    loader.stubbedModules = {courseModule: CourseListModule};
+    loader.stubbedModules = {courseModule: CoursesModule};
 
     router.resetConfig([
       {path: 'courses', loadChildren: 'courseModule'},
