@@ -11,9 +11,8 @@ import { of } from 'rxjs';
 import { CourseListComponent } from './course-list.component';
 import { CourseService } from './../../services/course.service';
 import { Course, CourseResponse } from './../../models/course';
-import { CreationDateStatusDirective } from '../../directives/creation-date-status.directive';
-import { FilterByPipe } from '../../pipes/filter-by.pipe';
 import { OrderByPipe } from '../../pipes/order-by.pipe';
+import { FilterByPipe } from '../../pipes/filter-by.pipe';
 
 const mockCourse = {
   id: 1,
@@ -26,25 +25,31 @@ const mockCourse = {
 @Component({
   selector: 'app-course-list-item',
   template: `
-    <h1 class="course-title-stub">{{mockCourse.title}}</h1>
-    <button class="edit-stub" (click)="edit.emit(mockCourse)"></button>
-    <button class="remove-stub" (click)="remove.emit(mockCourse)"></button>
+    <h1 class="title-stub">{{ course.title }}</h1>
+    <button class="edit-stub" (click)="edit.emit(course)"></button>
+    <button class="remove-stub" (click)="remove.emit(course)"></button>
   `
 })
 class CourseListItemStubComponent {
   @Input() course: Course;
   @Output() edit = new EventEmitter<Course>();
   @Output() remove = new EventEmitter<Course>();
-  mockCourse = mockCourse;
 }
 
 describe('CourseListComponent', () => {
   let component: CourseListComponent;
   let fixture: ComponentFixture<CourseListComponent>;
+  let mockService;
 
   const mockCourses: CourseResponse = {
     courses: [
-      mockCourse,
+      {
+        id: 1,
+        title: 'Title 1',
+        creationDate: '2018-05-09',
+        duration: 34,
+        description: 'Description 1'
+      },
       {
         id: 2,
         title: 'Title 2',
@@ -56,21 +61,21 @@ describe('CourseListComponent', () => {
     hasMoreCourses: true
   };
 
-  const mockService = {
-    getCourses: jasmine.createSpy('getCourses').and.returnValue(of(mockCourses))
-  };
-
   beforeEach(async(() => {
+    mockService = {
+      getList: jasmine.createSpy('getCourses').and.returnValue(of({...mockCourses})),
+      createCourse: jasmine.createSpy('updateItem'),
+      updateItem: jasmine.createSpy('updateItem'),
+      removeItem: jasmine.createSpy('removeItem'),
+    };
+
     TestBed.configureTestingModule({
-      declarations: [
-        CourseListComponent,
-        CourseListItemStubComponent,
-        CreationDateStatusDirective,
-        FilterByPipe,
-        OrderByPipe
-      ],
+      declarations: [ CourseListComponent, CourseListItemStubComponent, OrderByPipe, FilterByPipe ],
       imports: [ MatButtonModule, MatIconModule, MatInputModule, FormsModule, NoopAnimationsModule ],
-      providers: [{ provide: CourseService, useValue: mockService }, FilterByPipe]
+      providers: [
+        FilterByPipe,
+        { provide: CourseService, useValue: mockService }
+      ]
     })
     .compileComponents();
   }));
@@ -88,7 +93,7 @@ describe('CourseListComponent', () => {
 
   describe('#ngOnInit', () => {
     it('should retrieve courses list', () => {
-      expect(mockService.getCourses).toHaveBeenCalled();
+      expect(mockService.getList).toHaveBeenCalled();
     });
 
     it('should save courses data', () => {
@@ -116,17 +121,15 @@ describe('CourseListComponent', () => {
     expect(button).toBeTruthy();
   });
 
-  describe('#find', () => {
+  describe('#filter', () => {
     it('should search courses', () => {
-      component.searchCriteria = mockCourse.title;
+      component.searchCriteria = '1';
       fixture.detectChanges();
       const form = fixture.debugElement.query(By.css('.course-toolbar__search form'));
       form.triggerEventHandler('submit', null);
       fixture.detectChanges();
-      const items = fixture.debugElement.queryAll(By.css('.course-title-stub'));
-      const filteredItems = mockCourses.courses.filter((course) => course.title.toLowerCase().includes(component.searchCriteria));
-      const foundTitles = items.map((item) => item.nativeElement.innerText);
-      expect(foundTitles).toEqual(filteredItems.map((item) => item.title));
+      const resultTitle = fixture.debugElement.query(By.css('app-course-list-item .title-stub'));
+      expect(resultTitle.nativeElement.innerText).toEqual(mockCourses.courses[0].title);
     });
   });
 
@@ -134,7 +137,7 @@ describe('CourseListComponent', () => {
     it('should add courses', () => {
       const button = fixture.debugElement.query(By.css('.course-toolbar__add-course button'));
       button.triggerEventHandler('click', null);
-      expect(console.log).toHaveBeenCalledWith('adding course');
+      expect(mockService.createCourse).toHaveBeenCalled();
     });
   });
 
@@ -150,7 +153,7 @@ describe('CourseListComponent', () => {
     it('should edit course', () => {
       const stubTrigger = fixture.debugElement.query(By.css('.edit-stub'));
       stubTrigger.triggerEventHandler('click', null);
-      expect(console.log).toHaveBeenCalledWith('edit', mockCourse);
+      expect(mockService.updateItem).toHaveBeenCalledWith(mockCourse);
     });
   });
 
@@ -158,7 +161,7 @@ describe('CourseListComponent', () => {
     it('should remove course', () => {
       const stubTrigger = fixture.debugElement.query(By.css('.remove-stub'));
       stubTrigger.triggerEventHandler('click', null);
-      expect(console.log).toHaveBeenCalledWith('remove', mockCourse);
+      expect(mockService.removeItem).toHaveBeenCalledWith(mockCourse);
     });
   });
 });

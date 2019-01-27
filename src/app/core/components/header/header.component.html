@@ -4,7 +4,13 @@
   </a>
 
   <div class="user-controls">
-    <span class="user-controls__label">User Login</span>
-    <button mat-raised-button (click)="logout()">Log off</button>
+    <ng-container *ngIf="isAuthenticated">
+      <span class="user-controls__info">{{ user.firstName }} {{ user.lastName }}</span>
+      <button mat-raised-button (click)="logout()">Log off</button>
+    </ng-container>
+    <ng-container *ngIf="!isAuthenticated">
+      <span class="user-controls__info">User Login</span>
+      <button mat-raised-button (click)="login()">Log in</button>
+    </ng-container>
   </div>
 </header>

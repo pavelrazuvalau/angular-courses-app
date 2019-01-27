@@ -21,7 +21,6 @@ const COMPONENTS = [
 @NgModule({
   imports: [
     CommonModule,
-    CourseListModule,
     RouterModule,
     MatButtonModule,
     MatToolbarModule,
