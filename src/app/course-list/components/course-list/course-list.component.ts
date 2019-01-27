@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Course } from '../../models/course';
 import { CourseService } from '../../services/course.service';
 import { FilterByPipe } from '../../pipes/filter-by.pipe';
+import { MatDialog } from '@angular/material';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-course-list',
@@ -14,10 +16,10 @@ export class CourseListComponent implements OnInit {
   hasMoreCourses: boolean;
   searchCriteria: string;
 
-  constructor(private courseService: CourseService, private filterByPipe: FilterByPipe<Course>) {}
+  constructor(private courseService: CourseService, private filterByPipe: FilterByPipe<Course>, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.courseService.getCourses().subscribe(({ courses, hasMoreCourses }) => {
+    this.courseService.getList().subscribe(({ courses, hasMoreCourses }) => {
       this.courses = courses;
       this.hasMoreCourses = hasMoreCourses;
       this.filter();
@@ -29,18 +31,29 @@ export class CourseListComponent implements OnInit {
   }
 
   addCourse() {
-    console.log('adding course');
+    this.courseService.createCourse();
   }
 
   loadMore() {
-    console.log('loading more');
+    this.courseService.loadMoreCourses();
   }
 
   editCourse(course: Course) {
-    console.log('edit', course);
+    this.courseService.updateItem(course).subscribe((updatedCourse) => {
+      console.log('edit course', updatedCourse);
+    });
   }
 
   removeCourse(course: Course) {
-    console.log('remove', course);
+    this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px'
+    }).afterClosed().subscribe((isConfirmed) => {
+      if (isConfirmed) {
+        this.courseService.removeItem(course).subscribe(({ id }) => {
+          this.courses = this.courses.filter(_course => _course.id !== id);
+          this.filter();
+        });
+      }
+    });
   }
 }
