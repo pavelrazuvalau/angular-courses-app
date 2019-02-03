@@ -8,11 +8,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
-import { CourseListComponent } from './course-list.component';
-import { CourseService } from './../../services/course.service';
-import { Course, CourseResponse } from './../../models/course';
-import { OrderByPipe } from '../../pipes/order-by.pipe';
-import { FilterByPipe } from '../../pipes/filter-by.pipe';
+import { CourseListPageComponent } from './course-list-page.component';
+import { CourseService } from '../../../courses/services/course.service';
+import { Course, CourseResponse } from '../../../courses/models/course';
+import { OrderByPipe } from '../../../courses/pipes/order-by.pipe';
+import { FilterByPipe } from '../../../courses/pipes/filter-by.pipe';
 
 const mockCourse = {
   id: 1,
@@ -36,9 +36,9 @@ class CourseListItemStubComponent {
   @Output() remove = new EventEmitter<Course>();
 }
 
-describe('CourseListComponent', () => {
-  let component: CourseListComponent;
-  let fixture: ComponentFixture<CourseListComponent>;
+describe('CourseListPageComponent', () => {
+  let component: CourseListPageComponent;
+  let fixture: ComponentFixture<CourseListPageComponent>;
   let mockService;
 
   const mockCourses: CourseResponse = {
@@ -70,7 +70,7 @@ describe('CourseListComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ CourseListComponent, CourseListItemStubComponent, OrderByPipe, FilterByPipe ],
+      declarations: [ CourseListPageComponent, CourseListItemStubComponent, OrderByPipe, FilterByPipe ],
       imports: [ MatButtonModule, MatIconModule, MatInputModule, FormsModule, NoopAnimationsModule ],
       providers: [
         FilterByPipe,
@@ -81,7 +81,7 @@ describe('CourseListComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CourseListComponent);
+    fixture = TestBed.createComponent(CourseListPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     spyOn(console, 'log');
@@ -130,14 +130,6 @@ describe('CourseListComponent', () => {
       fixture.detectChanges();
       const resultTitle = fixture.debugElement.query(By.css('app-course-list-item .title-stub'));
       expect(resultTitle.nativeElement.innerText).toEqual(mockCourses.courses[0].title);
-    });
-  });
-
-  describe('#addCourse', () => {
-    it('should add courses', () => {
-      const button = fixture.debugElement.query(By.css('.course-toolbar__add-course button'));
-      button.triggerEventHandler('click', null);
-      expect(mockService.createCourse).toHaveBeenCalled();
     });
   });
 

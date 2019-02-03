@@ -9,7 +9,7 @@
   </div>
 
   <div class="course-toolbar__add-course">
-    <button mat-raised-button (click)="addCourse()">
+    <button mat-raised-button [routerLink]="['create']">
       <mat-icon>add</mat-icon>
       Add course
     </button>
@@ -17,12 +17,12 @@
 </section>
 
 <section class="course-list" *ngIf="filteredCourses && filteredCourses.length; else noData">
-  <app-course-list-item
+  <app-course-item
     *ngFor="let course of filteredCourses | orderBy:'creationDate'"
     [course]="course"
     (edit)="editCourse($event)"
     (remove)="removeCourse($event)">
-  </app-course-list-item>
+  </app-course-item>
   <button class="course-list__load-more" mat-raised-button *ngIf="hasMoreCourses" (click)="loadMore()">Load more</button>
 </section>
 

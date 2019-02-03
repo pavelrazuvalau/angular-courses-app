@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { of, Observable } from 'rxjs';
 
-import { CourseResponse, Course } from './../models/course';
+import { CourseResponse, Course } from '../models/course';
 import { coursesMock } from './course.mock';
 
 @Injectable({

@@ -1,22 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CourseListComponent } from './components/course-list/course-list.component';
-import { CourseListItemComponent } from './components/course-list-item/course-list-item.component';
+import { CourseListPageComponent } from './pages/course-list-page/course-list-page.component';
+import { CourseItemComponent } from './components/course-item/course-item.component';
 
 import { RouterModule } from '@angular/router';
-import { routes } from './course-list.routes';
+import { routes } from './courses.routes';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatCardModule,
+  MatIconModule,
+  MatDialogModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatChipsModule
+} from '@angular/material';
+
 import { MinutesToTimePipe } from './pipes/minutes-to-time.pipe';
 import { CreationDateStatusDirective } from './directives/creation-date-status.directive';
 import { FilterByPipe } from './pipes/filter-by.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { CourseFormPageComponent } from './pages/course-form-page/course-form-page.component';
 
 @NgModule({
   imports: [
@@ -27,20 +34,24 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     MatCardModule,
     MatIconModule,
     MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatChipsModule,
     RouterModule.forChild(routes),
   ],
   declarations: [
-    CourseListComponent,
-    CourseListItemComponent,
+    CourseListPageComponent,
+    CourseItemComponent,
     MinutesToTimePipe,
     CreationDateStatusDirective,
     FilterByPipe,
     OrderByPipe,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    CourseFormPageComponent,
   ],
   providers: [
     FilterByPipe
   ],
   entryComponents: [ConfirmationDialogComponent]
 })
-export class CourseListModule { }
+export class CoursesModule { }
