@@ -1,7 +1,8 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AuthService } from './core/services/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -15,6 +16,10 @@ describe('AppComponent', () => {
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA,
       ],
+      imports: [
+        AuthModule,
+        RouterTestingModule,
+      ]
     }).compileComponents();
   }));
 

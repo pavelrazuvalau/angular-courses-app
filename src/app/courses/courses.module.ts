@@ -23,7 +23,11 @@ import { CreationDateStatusDirective } from './directives/creation-date-status.d
 import { FilterByPipe } from './pipes/filter-by.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { CourseFormPageComponent } from './pages/course-form-page/course-form-page.component';
+import { CourseFormComponent } from './components/course-form/course-form.component';
+import { CourseService } from './services/course.service';
+import { EditCoursePageComponent } from './pages/edit-course-page/edit-course-page.component';
+import { CreateCoursePageComponent } from './pages/create-course-page/create-course-page.component';
+import { CourseResolver } from './resolvers/course.resolver';
 
 @NgModule({
   imports: [
@@ -47,9 +51,13 @@ import { CourseFormPageComponent } from './pages/course-form-page/course-form-pa
     FilterByPipe,
     OrderByPipe,
     ConfirmationDialogComponent,
-    CourseFormPageComponent,
+    CourseFormComponent,
+    EditCoursePageComponent,
+    CreateCoursePageComponent,
   ],
   providers: [
+    CourseService,
+    CourseResolver,
     FilterByPipe
   ],
   entryComponents: [ConfirmationDialogComponent]

@@ -13,11 +13,11 @@ export class CourseItemComponent {
   @Output() edit = new EventEmitter<Course>();
   @Output() remove = new EventEmitter<Course>();
 
-  onEdit() {
-    this.edit.emit(this.course);
-  }
-
   onRemove() {
     this.remove.emit(this.course);
+  }
+
+  onEdit() {
+    this.edit.emit(this.course);
   }
 }

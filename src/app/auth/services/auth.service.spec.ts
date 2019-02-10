@@ -1,16 +1,13 @@
 import { AuthService } from './auth.service';
 import { userMock } from './user-mock';
+import { skip } from 'rxjs/operators';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let mockLocalStorage;
 
   const mockUser = userMock;
 
   beforeEach(() => {
-    mockLocalStorage = {
-
-    };
     service = new AuthService();
     localStorage.clear();
   });
@@ -21,11 +18,11 @@ describe('AuthService', () => {
 
   describe('#login', () => {
     it('should log in', (done) => {
-      service.login();
-      service.isAuthenticated().subscribe((isAuthenticated) => {
+      service.isAuthenticated$.pipe(skip(1)).subscribe((isAuthenticated) => {
         expect(isAuthenticated).toEqual(true);
         done();
       });
+      service.login();
     });
 
     it('should store user data in local storage', () => {
@@ -37,11 +34,11 @@ describe('AuthService', () => {
 
   describe('#logout', () => {
     it('should log out', (done) => {
-      service.logout();
-      service.isAuthenticated().subscribe((isAuthenticated) => {
+      service.isAuthenticated$.pipe(skip(1)).subscribe((isAuthenticated) => {
         expect(isAuthenticated).toEqual(false);
         done();
       });
+      service.logout();
     });
 
     it('should remove user info', () => {

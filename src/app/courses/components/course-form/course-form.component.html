@@ -1,25 +1,25 @@
 <mat-card>
   <form autocomplete="off" #courseForm="ngForm" (submit)="courseForm.valid && onSubmit()">
     <mat-form-field>
-      <input matInput placeholder="Title" name="title" [(ngModel)]="inputCourse.title" required>
+      <input matInput placeholder="Title" name="title" [(ngModel)]="course.title" required>
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput placeholder="Description" name="description" [(ngModel)]="inputCourse.description" required></textarea>
+      <textarea matInput placeholder="Description" name="description" [(ngModel)]="course.description" required></textarea>
     </mat-form-field>
     <mat-form-field class="input-small">
-      <input matInput [matDatepicker]="picker" placeholder="Date" name="date" [(ngModel)]="inputCourse.creationDate" required>
+      <input matInput [matDatepicker]="picker" placeholder="Date" name="date" [(ngModel)]="course.creationDate" required>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <div class="duration-input">
       <mat-form-field class="input-small">
-        <input type="number" matInput placeholder="Duration" name="duration" [(ngModel)]="inputCourse.duration" required>
+        <input type="number" matInput placeholder="Duration" name="duration" [(ngModel)]="course.duration" required>
       </mat-form-field>
-      <span *ngIf="inputCourse.duration">{{ inputCourse.duration | minutesToTime }}</span>
+      <span *ngIf="course.duration">{{ course.duration | minutesToTime }}</span>
     </div>
     <mat-form-field>
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let author of inputCourse.authors" [selectable]="true"
+        <mat-chip *ngFor="let author of course.authors" [selectable]="true"
                  [removable]="true" (removed)="removeAuthor(author)">
           {{author}}
           <mat-icon matChipRemove>cancel</mat-icon>
@@ -33,7 +33,7 @@
     </mat-form-field>
     <div class="form-actions">
       <button type="submit" mat-raised-button>Save</button>
-      <button color="warn" mat-raised-button (click)="onCancel()">Cancel</button>
+      <button type="button" color="warn" mat-raised-button (click)="onCancel(); $event.preventDefault()">Cancel</button>
     </div>
   </form>
 </mat-card>

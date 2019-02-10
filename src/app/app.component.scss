@@ -1,6 +1,7 @@
-:host {
-  min-height: 100%;
+.app-container {
+  min-height: 100vh;
   padding: 0 20px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 
@@ -12,6 +13,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
 
   .page-footer & > * {
