@@ -7,25 +7,24 @@ import { LoginPageComponent } from './login-page.component';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CoursesModule } from 'src/app/courses/courses.module';
-import { NgModuleFactoryLoader } from '@angular/core';
-import { userMock } from 'src/app/core/services/user-mock';
+import { userMock } from 'src/app/auth/services/user-mock';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
-  let router: Router;
-  let location: Location;
   let mockAuthService;
+  let mockRouter;
 
   beforeEach(async(() => {
     mockAuthService = {
       login: jasmine.createSpy('login').and.returnValue(of(userMock))
+    };
+
+    mockRouter = {
+      navigate: jasmine.createSpy('navigate')
     };
 
     TestBed.configureTestingModule({
@@ -35,29 +34,18 @@ describe('LoginPageComponent', () => {
         FormsModule,
         MatCardModule,
         NoopAnimationsModule,
-        RouterTestingModule.withRoutes(ROUTES)
       ],
       providers: [
         { provide: AuthService, useValue: mockAuthService },
+        { provide: Router, useValue: mockRouter }
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    router = TestBed.get(Router);
-    location = TestBed.get(Location);
-
     fixture = TestBed.createComponent(LoginPageComponent);
     component = fixture.componentInstance;
-
-    const loader = TestBed.get(NgModuleFactoryLoader);
-    loader.stubbedModules = {courseModule: CoursesModule};
-
-    router.resetConfig([
-      {path: 'courses', loadChildren: 'courseModule'},
-    ]);
-
     fixture.detectChanges();
   });
 
@@ -65,15 +53,12 @@ describe('LoginPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should login', fakeAsync(() => {
+  it('should login', () => {
     component.userName = 'username';
     component.password = 'p455w0rd';
     fixture.detectChanges();
     const form = fixture.debugElement.query(By.css('form'));
-    fixture.ngZone.run(() => {
-      form.triggerEventHandler('submit', null);
-      tick();
-      expect(location.path()).toEqual('/');
-    });
-  }));
+    form.triggerEventHandler('submit', null);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+  });
 });

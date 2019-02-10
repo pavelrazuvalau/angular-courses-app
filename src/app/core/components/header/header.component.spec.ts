@@ -1,22 +1,25 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModuleFactoryLoader } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Directive, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HeaderComponent } from './header.component';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { of } from 'rxjs';
-import { ROUTES } from 'src/app/app.routes';
 import { Router } from '@angular/router';
-import { LoginModule } from 'src/app/login/login.module';
-import { Location } from '@angular/common';
+
+@Directive({ // tslint:disable-next-line
+  selector: '[routerLink]'
+})
+class NoopRouterLinkDirective {
+  @Input() routerLink: any;
+}
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let router: Router;
-  let location: Location;
   let mockAuthService;
+  let mockRouter;
+
   let isAuthenticated = false;
 
   const mockUser = {
@@ -28,35 +31,29 @@ describe('HeaderComponent', () => {
   beforeEach(async(() => {
     mockAuthService = {
       logout: jasmine.createSpy('logout').and.returnValue(of(false)),
-      isAuthenticated: jasmine.createSpy('isAuthenticated').and.returnValue(of(isAuthenticated)),
+      isAuthenticated$: of(isAuthenticated),
       getUserInfo: jasmine.createSpy('getUserInfo').and.returnValue(mockUser),
     };
 
+    mockRouter = {
+      navigate: jasmine.createSpy('navigate')
+    };
+
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
-      imports: [ MatButtonModule, RouterTestingModule.withRoutes(ROUTES) ],
+      declarations: [ HeaderComponent, NoopRouterLinkDirective ],
+      imports: [ MatButtonModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       providers: [
-        { provide: AuthService, useValue: mockAuthService }
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: Router, useValue: mockRouter }
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    router = TestBed.get(Router);
-    location = TestBed.get(Location);
-
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
-
-    const loader = TestBed.get(NgModuleFactoryLoader);
-    loader.stubbedModules = {loginModule: LoginModule};
-
-    router.resetConfig([
-      {path: 'login', loadChildren: 'loginModule'},
-    ]);
-
     fixture.detectChanges();
   });
 
@@ -69,14 +66,11 @@ describe('HeaderComponent', () => {
       isAuthenticated = false;
     });
 
-    it('should retrive login page by login button click', fakeAsync(() => {
+    it('should retrive login page by login button click', () => {
       const button = fixture.debugElement.query(By.css('.user-controls button'));
-      fixture.ngZone.run(() => {
-        button.triggerEventHandler('click', null);
-        tick();
-        expect(location.path()).toEqual('/login');
-      });
-    }));
+      button.triggerEventHandler('click', null);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
+    });
   });
 
   describe('user is logged in', () => {

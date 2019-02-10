@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../../../courses/models/course';
 import { CourseService } from '../../../courses/services/course.service';
+import { BreadcrumbsService } from './../../../core/services/breadcrumbs.service';
 import { FilterByPipe } from '../../../courses/pipes/filter-by.pipe';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbsSegment } from 'src/app/core/models/breadcrumbs-segment';
 
 @Component({
   selector: 'app-course-list',
@@ -16,7 +19,12 @@ export class CourseListPageComponent implements OnInit {
   hasMoreCourses: boolean;
   searchCriteria: string;
 
-  constructor(private courseService: CourseService, private filterByPipe: FilterByPipe<Course>, private dialog: MatDialog) {}
+  constructor(private courseService: CourseService,
+              private breadcrumbsService: BreadcrumbsService,
+              private filterByPipe: FilterByPipe<Course>,
+              private dialog: MatDialog,
+              private router: Router,
+              private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.courseService.getList().subscribe(({ courses, hasMoreCourses }) => {
@@ -24,6 +32,16 @@ export class CourseListPageComponent implements OnInit {
       this.hasMoreCourses = hasMoreCourses;
       this.filter();
     });
+
+    const segments: BreadcrumbsSegment[] = [];
+    let currentRoute = this.route.snapshot.parent;
+
+    while (currentRoute && currentRoute.data && currentRoute.data.breadcrumb) {
+      segments.unshift(currentRoute.data.breadcrumb);
+      currentRoute = currentRoute.parent;
+    }
+
+    this.breadcrumbsService.updateSegments(segments);
   }
 
   filter() {
@@ -35,9 +53,7 @@ export class CourseListPageComponent implements OnInit {
   }
 
   editCourse(course: Course) {
-    this.courseService.updateItem(course).subscribe((updatedCourse) => {
-      console.log('edit course', updatedCourse);
-    });
+    this.router.navigate([course.id]);
   }
 
   removeCourse(course: Course) {

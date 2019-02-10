@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './core/services/auth.service';
+import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
+import { AuthService } from './auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +9,23 @@ import { AuthService } from './core/services/auth.service';
 })
 export class AppComponent implements OnInit {
   isAuthenticated = false;
+  isLoading = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.isAuthenticated().subscribe((isAuthenticated) => {
+    this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
       this.isAuthenticated = isAuthenticated;
+    });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.isLoading = true;
+      }
+
+      if (event instanceof NavigationEnd || event instanceof NavigationError || event instanceof NavigationCancel) {
+        this.isLoading = false;
+      }
     });
   }
 }

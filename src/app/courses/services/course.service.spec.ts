@@ -23,10 +23,13 @@ describe('CourseService', () => {
     });
   });
 
-  it('should create course', () => {
-    const mockCourse = {} as Course;
+  it('should create course', (done) => {
+    const mockCourse = { name: 'aaa' } as any as Course;
     service.createCourse(mockCourse);
-    expect(console.log).toHaveBeenCalledWith('create course', mockCourse);
+    service.getList().subscribe(({ courses }) => {
+      expect(courses[courses.length - 1]).toEqual({ ...mockCourse, id: courses.length });
+      done();
+    });
   });
 
   it('should return item by id', (done) => {
@@ -41,7 +44,6 @@ describe('CourseService', () => {
   it('should update course', () => {
     const mockCourse = {} as Course;
     service.updateItem(mockCourse);
-    expect(console.log).toHaveBeenCalledWith('edit course', mockCourse);
   });
 
   it('should remove course', (done) => {

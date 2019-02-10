@@ -1,3 +1,5 @@
+import { routes } from './../../courses.routes';
+import { ROUTES } from './../../../app.routes';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component } from '@angular/core';
@@ -8,11 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MinutesToTimePipe } from '../../../courses/pipes/minutes-to-time.pipe';
 import { CourseItemComponent } from './course-item.component';
 import { CreationDateStatusDirective } from '../../../courses/directives/creation-date-status.directive';
+import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({
   template: `
-    <app-course-list-item [course]="course" (edit)="edit($event)" (remove)="remove($event)">
-    </app-course-list-item>
+    <app-course-item [course]="course" (edit)="edit($event)" (remove)="remove($event)">
+    </app-course-item>
   `
 })
 class TestHostComponent {
@@ -34,7 +37,12 @@ describe('CourseItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CourseItemComponent, MinutesToTimePipe, TestHostComponent, CreationDateStatusDirective ],
-      imports: [ MatCardModule, MatButtonModule, MatIconModule ],
+      imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        RouterTestingModule
+      ],
     })
     .compileComponents();
   }));

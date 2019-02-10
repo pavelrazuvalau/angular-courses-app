@@ -1,7 +1,7 @@
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +13,9 @@ import { CourseService } from '../../../courses/services/course.service';
 import { Course, CourseResponse } from '../../../courses/models/course';
 import { OrderByPipe } from '../../../courses/pipes/order-by.pipe';
 import { FilterByPipe } from '../../../courses/pipes/filter-by.pipe';
+import { BreadcrumbsService } from 'src/app/core/services/breadcrumbs.service';
+import { MatDialog } from '@angular/material';
+import { Router, ActivatedRoute } from '@angular/router';
 
 const mockCourse = {
   id: 1,
@@ -23,14 +26,14 @@ const mockCourse = {
 };
 
 @Component({
-  selector: 'app-course-list-item',
+  selector: 'app-course-item',
   template: `
     <h1 class="title-stub">{{ course.title }}</h1>
     <button class="edit-stub" (click)="edit.emit(course)"></button>
     <button class="remove-stub" (click)="remove.emit(course)"></button>
   `
 })
-class CourseListItemStubComponent {
+class CourseItemStubComponent {
   @Input() course: Course;
   @Output() edit = new EventEmitter<Course>();
   @Output() remove = new EventEmitter<Course>();
@@ -40,6 +43,10 @@ describe('CourseListPageComponent', () => {
   let component: CourseListPageComponent;
   let fixture: ComponentFixture<CourseListPageComponent>;
   let mockService;
+  let mockBreadcrumbsService;
+  let mockRouter;
+  let mockActivatedRoute;
+  let mockDialog;
 
   const mockCourses: CourseResponse = {
     courses: [
@@ -66,16 +73,53 @@ describe('CourseListPageComponent', () => {
       getList: jasmine.createSpy('getCourses').and.returnValue(of({...mockCourses})),
       createCourse: jasmine.createSpy('updateItem'),
       updateItem: jasmine.createSpy('updateItem'),
-      removeItem: jasmine.createSpy('removeItem'),
+      removeItem: jasmine.createSpy('removeItem').and.returnValue(of()),
+      loadMoreCourses: jasmine.createSpy('loadMoreCourses'),
+    };
+
+    mockBreadcrumbsService = {
+      segments$: of([]),
+      updateSegments: jasmine.createSpy('updateSegments')
+    };
+
+    mockRouter = {
+      navigate: jasmine.createSpy('navigate')
+    };
+
+    mockActivatedRoute = {
+      snapshot: {
+        parent: {
+          data: { breadcrumb: { name: 'Courses', url: '/courses' } }
+        }
+      }
+    };
+
+    mockDialog = {
+      open: jasmine.createSpy('dialog.open').and.returnValues({ afterClosed: () => of(true) })
     };
 
     TestBed.configureTestingModule({
-      declarations: [ CourseListPageComponent, CourseListItemStubComponent, OrderByPipe, FilterByPipe ],
-      imports: [ MatButtonModule, MatIconModule, MatInputModule, FormsModule, NoopAnimationsModule ],
+      declarations: [
+        CourseListPageComponent,
+        CourseItemStubComponent,
+        OrderByPipe,
+        FilterByPipe,
+      ],
+      imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        FormsModule,
+        NoopAnimationsModule
+      ],
       providers: [
         FilterByPipe,
-        { provide: CourseService, useValue: mockService }
-      ]
+        { provide: BreadcrumbsService, useValue: mockBreadcrumbsService },
+        { provide: CourseService, useValue: mockService },
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: MatDialog, useValue: mockDialog }
+      ],
     })
     .compileComponents();
   }));
@@ -84,7 +128,6 @@ describe('CourseListPageComponent', () => {
     fixture = TestBed.createComponent(CourseListPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    spyOn(console, 'log');
   });
 
   it('should create', () => {
@@ -103,7 +146,7 @@ describe('CourseListPageComponent', () => {
   });
 
   it('should render course items', () => {
-    const items = fixture.debugElement.queryAll(By.css('app-course-list-item'));
+    const items = fixture.debugElement.queryAll(By.css('app-course-item'));
     expect(items.length).toEqual(mockCourses.courses.length);
   });
 
@@ -128,7 +171,7 @@ describe('CourseListPageComponent', () => {
       const form = fixture.debugElement.query(By.css('.course-toolbar__search form'));
       form.triggerEventHandler('submit', null);
       fixture.detectChanges();
-      const resultTitle = fixture.debugElement.query(By.css('app-course-list-item .title-stub'));
+      const resultTitle = fixture.debugElement.query(By.css('app-course-item .title-stub'));
       expect(resultTitle.nativeElement.innerText).toEqual(mockCourses.courses[0].title);
     });
   });
@@ -137,7 +180,7 @@ describe('CourseListPageComponent', () => {
     it('should load more courses', () => {
       const button = fixture.debugElement.query(By.css('.course-list__load-more'));
       button.triggerEventHandler('click', null);
-      expect(console.log).toHaveBeenCalledWith('loading more');
+      expect(mockService.loadMoreCourses).toHaveBeenCalled();
     });
   });
 
@@ -145,7 +188,7 @@ describe('CourseListPageComponent', () => {
     it('should edit course', () => {
       const stubTrigger = fixture.debugElement.query(By.css('.edit-stub'));
       stubTrigger.triggerEventHandler('click', null);
-      expect(mockService.updateItem).toHaveBeenCalledWith(mockCourse);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([mockCourses.courses[0].id]);
     });
   });
 

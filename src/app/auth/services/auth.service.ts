@@ -3,11 +3,9 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { of, Observable, BehaviorSubject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
-  private isAuthenticated$ = new BehaviorSubject<boolean>(this._isAuthenticated());
+  isAuthenticated$ = new BehaviorSubject<boolean>(this.isAuthenticated());
 
   login(): Observable<User> {
     const token = this.generateFakeToken();
@@ -29,8 +27,8 @@ export class AuthService {
     return of();
   }
 
-  isAuthenticated(): Observable<boolean> {
-    return this.isAuthenticated$.asObservable();
+  isAuthenticated(): boolean {
+    return !!(localStorage.getItem('currentUser') && localStorage.getItem('accessToken'));
   }
 
   getUserInfo(): User {
@@ -39,9 +37,5 @@ export class AuthService {
 
   private generateFakeToken() {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  }
-
-  private _isAuthenticated(): boolean {
-    return !!(localStorage.getItem('currentUser') && localStorage.getItem('accessToken'));
   }
 }

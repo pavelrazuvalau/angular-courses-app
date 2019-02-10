@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreadcrumbsService } from '../../services/breadcrumbs.service';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./breadcrumbs.component.scss']
 })
 export class BreadcrumbsComponent {
-  segments = ['courses']; // fake url segments
+  segments$ = this.breadcrumbsService.segments$;
+
+  constructor(private breadcrumbsService: BreadcrumbsService) {}
 }
