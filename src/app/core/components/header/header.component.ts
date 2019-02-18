@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+
 import { User } from '../../../auth/models/user';
 import { AuthService } from './../../../auth/services/auth.service';
 
@@ -9,21 +12,14 @@ import { AuthService } from './../../../auth/services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  user: User;
-  isAuthenticated = false;
+  user$: Observable<User>;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
-      this.isAuthenticated = isAuthenticated;
-
-      if (this.isAuthenticated) {
-        this.user = this.authService.getUserInfo();
-      } else {
-        this.user = null;
-      }
-    });
+    this.user$ = this.authService.isAuthenticated$.pipe(
+      mergeMap((isAuthenticated) => isAuthenticated ? this.authService.getUserInfo() : of(null))
+    );
   }
 
   login() {

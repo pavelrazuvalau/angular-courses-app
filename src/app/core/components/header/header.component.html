@@ -4,13 +4,13 @@
   </a>
 
   <div class="user-controls">
-    <ng-container *ngIf="isAuthenticated">
-      <span class="user-controls__info">{{ user.firstName }} {{ user.lastName }}</span>
+    <ng-container *ngIf="user$ | async as user; else noUser">
+      <span class="user-controls__info">{{ user.name.first }} {{ user.name.last }}</span>
       <button mat-raised-button (click)="logout()">Log off</button>
     </ng-container>
-    <ng-container *ngIf="!isAuthenticated">
+    <ng-template #noUser>
       <span class="user-controls__info">User Login</span>
       <button mat-raised-button (click)="login()">Log in</button>
-    </ng-container>
+    </ng-template>
   </div>
 </header>

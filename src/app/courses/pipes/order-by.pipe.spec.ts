@@ -7,30 +7,30 @@ describe('OrderByPipe', () => {
   const courses = [
     {
       id: 3,
-      title: 'Title 3',
-      creationDate: '2018-05-10',
-      duration: 34,
+      name: 'Title 3',
+      date: '2018-05-10',
+      length: 34,
       description: 'Description 3'
     },
     {
       id: 4,
-      title: 'Title 3',
-      creationDate: '2018-05-10',
-      duration: 34,
+      name: 'Title 3',
+      date: '2018-05-10',
+      length: 34,
       description: 'Description 3'
     },
     {
       id: 2,
-      title: 'Title 2',
-      creationDate: '2018-05-10',
-      duration: 35,
+      name: 'Title 2',
+      date: '2018-05-10',
+      length: 35,
       description: 'Description 2'
     },
     {
       id: 1,
-      title: 'Title 1',
-      creationDate: '2018-05-10',
-      duration: 36,
+      name: 'Title 1',
+      date: '2018-05-10',
+      length: 36,
       description: 'Description 1'
     }
   ];
@@ -38,30 +38,30 @@ describe('OrderByPipe', () => {
   const orderedCourses = [
     {
       id: 1,
-      title: 'Title 1',
-      creationDate: '2018-05-10',
-      duration: 36,
+      name: 'Title 1',
+      date: '2018-05-10',
+      length: 36,
       description: 'Description 1'
     },
     {
       id: 2,
-      title: 'Title 2',
-      creationDate: '2018-05-10',
-      duration: 35,
+      name: 'Title 2',
+      date: '2018-05-10',
+      length: 35,
       description: 'Description 2'
     },
     {
       id: 3,
-      title: 'Title 3',
-      creationDate: '2018-05-10',
-      duration: 34,
+      name: 'Title 3',
+      date: '2018-05-10',
+      length: 34,
       description: 'Description 3'
     },
     {
       id: 4,
-      title: 'Title 3',
-      creationDate: '2018-05-10',
-      duration: 34,
+      name: 'Title 3',
+      date: '2018-05-10',
+      length: 34,
       description: 'Description 3'
     },
   ];
@@ -75,6 +75,6 @@ describe('OrderByPipe', () => {
   });
 
   it('should sort by specific field', () => {
-    expect(pipe.transform(courses, 'title')).toEqual(orderedCourses);
+    expect(pipe.transform(courses, 'name')).toEqual(orderedCourses);
   });
 });

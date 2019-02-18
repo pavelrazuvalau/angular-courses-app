@@ -14,6 +14,7 @@ import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
 
 import { ROUTES } from './app.routes';
+import { HttpClientModule } from '@angular/common/http';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -27,6 +28,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserModule,
     CoreModule,
     AuthModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES),
     PerfectScrollbarModule,
     BrowserAnimationsModule

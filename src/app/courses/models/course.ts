@@ -1,11 +1,17 @@
+export interface CourseAuthor {
+  id?: number;
+  firstName: string;
+  lastName?: string;
+}
+
 export interface Course {
   id?: number;
-  title: string;
-  creationDate: string;
-  duration: number;
+  name: string;
+  date: string;
+  length: number;
   description: string;
-  authors?: string[];
-  topRated?: boolean;
+  authors?: CourseAuthor[];
+  isTopRated?: boolean;
 }
 
 export interface CourseResponse {

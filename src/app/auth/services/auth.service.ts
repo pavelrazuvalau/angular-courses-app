@@ -1,25 +1,34 @@
-import { userMock } from './user-mock';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
-import { of, Observable, BehaviorSubject } from 'rxjs';
+import { of, Observable, BehaviorSubject, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
+  private readonly AUTH_URL = 'auth';
+
   isAuthenticated$ = new BehaviorSubject<boolean>(this.isAuthenticated());
 
-  login(): Observable<User> {
-    const token = this.generateFakeToken();
+  constructor(private http: HttpClient) {}
 
-    localStorage.currentUser = JSON.stringify(userMock);
-    localStorage.accessToken = token;
-
-    this.isAuthenticated$.next(true);
-
-    return of(userMock);
+  login(login: string, password: string): Observable<void | HttpErrorResponse> {
+    return this.http.post(`${this.AUTH_URL}/login`, {
+      login,
+      password
+    }).pipe(
+      map((response: any) => {
+        localStorage.accessToken = JSON.stringify(response.token);
+        this.isAuthenticated$.next(true);
+      }),
+      catchError((error) => throwError({
+        ...error,
+        message: error.status === 401 ? 'Incorrect username or password' : error.message
+      }))
+    );
   }
 
   logout(): Observable<any> {
-    localStorage.removeItem('currentUser');
     localStorage.removeItem('accessToken');
 
     this.isAuthenticated$.next(false);
@@ -28,14 +37,20 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!(localStorage.getItem('currentUser') && localStorage.getItem('accessToken'));
+    return !!(this.getLocalStorageItem('accessToken'));
   }
 
-  getUserInfo(): User {
-    return JSON.parse(localStorage.getItem('currentUser'));
+  getUserInfo(): Observable<User> {
+    return this.http.get<User>(`${this.AUTH_URL}/userInfo`);
   }
 
-  private generateFakeToken() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  getToken(): string {
+    return this.getLocalStorageItem('accessToken');
+  }
+
+  private getLocalStorageItem(prop: string) {
+    const item = localStorage.getItem(prop);
+
+    return item && JSON.parse(item);
   }
 }
