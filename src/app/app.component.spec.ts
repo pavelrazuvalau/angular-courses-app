@@ -1,14 +1,20 @@
+import { of } from 'rxjs';
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AuthModule } from './auth/auth.module';
 import { RouterTestingModule } from '@angular/router/testing';
+import { AuthService } from './auth/services/auth.service';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
+  let mockAuth;
 
   beforeEach(async(() => {
+    mockAuth = {
+      isAuthenticated$: of(true)
+    };
+
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
@@ -17,8 +23,10 @@ describe('AppComponent', () => {
         CUSTOM_ELEMENTS_SCHEMA,
       ],
       imports: [
-        AuthModule,
         RouterTestingModule,
+      ],
+      providers: [
+        { provide: AuthService, useValue: mockAuth }
       ]
     }).compileComponents();
   }));

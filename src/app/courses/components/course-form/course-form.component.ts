@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material';
 
-import { Course } from '../../models/course';
+import { Course, CourseAuthor } from '../../models/course';
 
 @Component({
   selector: 'app-course-form',
@@ -13,30 +13,30 @@ export class CourseFormComponent {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   @Input() course: Course = {
-    title: null,
-    creationDate: null,
-    duration: null,
+    name: null,
+    date: null,
+    length: null,
     description: null,
     authors: []
   };
 
-  @Output() submit = new EventEmitter<Course>();
+  @Output() save = new EventEmitter<Course>();
   @Output() cancel = new EventEmitter();
+  @ViewChild('courseForm') courseForm;
 
   addAuthor(event: MatChipInputEvent): void {
     const input = event.input;
-    const value = event.value.trim();
+    const value = event.value.replace(/\s+/g, ' ');
+    const fullName = value.split(' ').slice(0, 2);
 
-    if ((value || '')) {
-      this.course.authors.push(value);
-    }
+    if (fullName.length >= 2) {
+      this.course.authors.push({ firstName: fullName[0], lastName: fullName[1] });
 
-    if (input) {
       input.value = '';
     }
   }
 
-  removeAuthor(author: string): void {
+  removeAuthor(author: CourseAuthor): void {
     const index = this.course.authors.indexOf(author);
 
     if (index >= 0) {
@@ -45,7 +45,8 @@ export class CourseFormComponent {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.course);
+    console.log(this.courseForm);
+    this.save.emit(this.course);
   }
 
   onCancel(): void {

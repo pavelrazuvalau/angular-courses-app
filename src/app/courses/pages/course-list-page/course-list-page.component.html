@@ -1,6 +1,6 @@
 <section class="course-toolbar">
   <div class="course-toolbar__search">
-    <form autocomplete="off" (submit)="filter()">
+    <form autocomplete="off" (submit)="reloadCourses()">
       <mat-form-field>
         <input matInput [(ngModel)]="searchCriteria" name="searchCriteria">
       </mat-form-field>
@@ -16,14 +16,14 @@
   </div>
 </section>
 
-<section class="course-list" *ngIf="filteredCourses && filteredCourses.length; else noData">
+<section class="course-list" *ngIf="courses && courses.length; else noData">
   <app-course-item
-    *ngFor="let course of filteredCourses | orderBy:'creationDate'"
+    *ngFor="let course of courses | orderBy:'creationDate'"
     [course]="course"
     (edit)="editCourse($event)"
     (remove)="removeCourse($event)">
   </app-course-item>
-  <button class="course-list__load-more" mat-raised-button *ngIf="hasMoreCourses" (click)="loadMore()">Load more</button>
+  <button class="course-list__load-more" mat-raised-button *ngIf="hasMoreCourses" (click)="loadMoreCourses()">Load more</button>
 </section>
 
 <ng-template #noData>

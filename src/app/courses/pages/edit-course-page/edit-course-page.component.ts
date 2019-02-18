@@ -24,7 +24,7 @@ export class EditCoursePageComponent implements OnInit {
     const segments: BreadcrumbsSegment[] = [];
     let currentRoute = this.route.snapshot.parent;
 
-    segments.unshift({ name: this.course.title });
+    segments.unshift({ name: this.course.name });
 
     while (currentRoute && currentRoute.data && currentRoute.data.breadcrumb) {
       segments.unshift(currentRoute.data.breadcrumb);

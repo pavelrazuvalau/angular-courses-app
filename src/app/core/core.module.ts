@@ -14,6 +14,9 @@ import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.com
 
 import { BreadcrumbsService } from './services/breadcrumbs.service';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { APIInterceptor } from './interceptors/api.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 const COMPONENTS = [
   HeaderComponent,
@@ -41,6 +44,16 @@ const COMPONENTS = [
   ],
   providers: [
     BreadcrumbsService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: APIInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ]
 })
 export class CoreModule { }

@@ -1,5 +1,3 @@
-import { routes } from './../../courses.routes';
-import { ROUTES } from './../../../app.routes';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component } from '@angular/core';
@@ -23,9 +21,9 @@ class TestHostComponent {
   remove = jasmine.createSpy('remove');
   course = {
     id: 1,
-    title: 'Title 1',
-    creationDate: '2018-05-09',
-    duration: 90,
+    name: 'Title 1',
+    date: '2018-05-09',
+    length: 90,
     description: 'Description'
   };
 }
@@ -55,19 +53,19 @@ describe('CourseItemComponent', () => {
 
   it('should contain course title info', () => {
     const element = fixture.debugElement.query(By.css('.card-header__title'));
-    expect(element.nativeElement.innerText).toContain(testHost.course.title.toUpperCase());
+    expect(element.nativeElement.innerText).toContain(testHost.course.name.toUpperCase());
   });
 
   it('should contain course duration info', () => {
     const minutesToTimePipe = new MinutesToTimePipe();
     const element = fixture.debugElement.query(By.css('.card-header__info__duration'));
-    expect(element.nativeElement.innerText).toContain(minutesToTimePipe.transform(testHost.course.duration));
+    expect(element.nativeElement.innerText).toContain(minutesToTimePipe.transform(testHost.course.length));
   });
 
   it('should contain course creation date info', () => {
     const datePipe = new DatePipe('en-US');
     const element = fixture.debugElement.query(By.css('.card-header__info__date'));
-    expect(element.nativeElement.innerText).toContain(datePipe.transform(testHost.course.creationDate, 'MM.dd.yyyy'));
+    expect(element.nativeElement.innerText).toContain(datePipe.transform(testHost.course.date, 'MM.dd.yyyy'));
   });
 
   it('should contain course description info', () => {

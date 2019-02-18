@@ -1,39 +1,43 @@
+import { CourseResponse } from './../models/course';
 import { Injectable } from '@angular/core';
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { CourseResponse, Course } from '../models/course';
-import { coursesMock } from './course.mock';
+import { Course } from '../models/course';
 
 @Injectable()
 export class CourseService {
-  private courseResponse = coursesMock;
+  private readonly COURSES_URL = 'courses';
+  private readonly LIMIT = 10;
 
-  getList(): Observable<CourseResponse> {
-    return of({ ...this.courseResponse });
+  constructor(private http: HttpClient) {}
+
+  getList(page: number = 0, searchCriteria?: string): Observable<CourseResponse> {
+    const params = new HttpParams()
+      .set('start', (page * this.LIMIT).toString())
+      .set('count', (this.LIMIT).toString())
+      .set('textFragment', searchCriteria || '');
+
+    return this.http.get<Course[]>(this.COURSES_URL, { params })
+      .pipe(
+        map((courses) => ({ courses, hasMoreCourses: courses.length === this.LIMIT }))
+      );
   }
 
   createCourse(course: Course): Observable<Course>  {
-    this.courseResponse.courses.push({ ...course, id: this.courseResponse.courses.length + 1 });
-    return of(course);
+    return this.http.post<Course>(this.COURSES_URL, course);
   }
 
   getItemById(id: number): Observable<Course> {
-    return of({ ...this.courseResponse.courses.find(course => course.id === id) });
+    return this.http.get<Course>(`${this.COURSES_URL}/${id}`);
   }
 
   updateItem(course: Course): Observable<Course> {
-    const idx = this.courseResponse.courses.findIndex((_course) => _course.id === course.id);
-    this.courseResponse.courses[idx] = { ...course };
-    return of(this.courseResponse.courses[idx]);
+    return this.http.put<Course>(`${this.COURSES_URL}/${course.id}`, course);
   }
 
   removeItem(course: Course): Observable<any> {
-    this.courseResponse.courses = this.courseResponse.courses.filter(_course => _course.id !== course.id);
-
-    return of({ id: course.id });
-  }
-
-  loadMoreCourses(): void {
-    console.log('create course');
+    return this.http.delete(`${this.COURSES_URL}/${course.id}`);
   }
 }
