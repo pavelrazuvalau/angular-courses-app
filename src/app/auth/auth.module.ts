@@ -1,25 +1,22 @@
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthGuard } from './guards/auth.guard';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
-export function authServiceFactory(authService: AuthService) {
-  return () => authService.getUserInfo();
-}
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { reducer } from './reducers/auth.reducer';
+import { AuthEffects } from './effects/auth.effects';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    StoreModule.forFeature('auth', reducer),
+    EffectsModule.forFeature([AuthEffects])
   ],
   providers: [
     AuthService,
     AuthGuard,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: authServiceFactory,
-      deps: [AuthService],
-      multi: true,
-    },
   ]
 })
 export class AuthModule { }

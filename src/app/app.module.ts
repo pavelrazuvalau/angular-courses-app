@@ -1,3 +1,4 @@
+import { EffectsModule } from '@ngrx/effects';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -15,10 +16,20 @@ import { AuthModule } from './auth/auth.module';
 
 import { ROUTES } from './app.routes';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { localStorageSync } from 'ngrx-store-localstorage';
+import { environment } from '../environments/environment';
+import { reducer as appReducer } from './reducers/app.reducer';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
+
+const metaReducers: Array<MetaReducer<any, any>> = [
+  (reducer: ActionReducer<any>): ActionReducer<any> => localStorageSync({ keys: ['auth'], rehydrate: true })(reducer)
+];
 
 @NgModule({
   declarations: [
@@ -30,8 +41,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AuthModule,
     HttpClientModule,
     RouterModule.forRoot(ROUTES),
+    StoreModule.forRoot({ app: appReducer }, { metaReducers }),
+    EffectsModule.forRoot([]),
+    StoreRouterConnectingModule,
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
     PerfectScrollbarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [
     {

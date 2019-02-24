@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../auth/services/auth.service';
+
+import { Store, select } from '@ngrx/store';
+
+import { AuthState } from 'src/app/auth/reducers/auth.reducer';
+import { loginErrorMessage } from './../../../auth/reducers/auth.reducer';
+import { LogInAction } from 'src/app/auth/actions/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -10,16 +14,12 @@ import { AuthService } from '../../../auth/services/auth.service';
 export class LoginPageComponent {
   userName: string;
   password: string;
-  errorMessage: string;
+  errorMessage$ = this.store.pipe(select(loginErrorMessage));
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private store: Store<AuthState>) {}
 
   login() {
-    this.authService.login(this.userName, this.password).subscribe(() => {
-      this.router.navigate(['/']);
-    }, (error) => {
-      this.errorMessage = error.message;
-    });
+    this.store.dispatch(new LogInAction({ login: this.userName, password: this.password }));
   }
 
 }

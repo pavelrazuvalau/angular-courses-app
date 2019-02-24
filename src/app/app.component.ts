@@ -1,39 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-
-import { AuthService } from './auth/services/auth.service';
-import { LoaderService } from './core/services/loader.service';
+import { Component } from '@angular/core';
+import { AuthState, isAuthenticated } from './auth/reducers/auth.reducer';
+import { Store, select } from '@ngrx/store';
+import { debounceTime, map } from 'rxjs/operators';
+import { AppState, appStateSelector } from './reducers/app.reducer';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
-  isAuthenticated = false;
-  isLoading = false;
+export class AppComponent {
+  isAuthenticated$ = this.authStore.pipe(select(isAuthenticated));
+  isLoading$ = this.appStore.pipe(
+    select(appStateSelector),
+    // Still haven't fixed it. TODO: find a way of not spaming loading action or not use it per each request at all
+    // Instead I'd listen NavigationEnd event as previously and use isLoading boolean per store to indicate the loading process
+    debounceTime(0),
+    map((state: AppState) => state.isLoading)
+  );
 
-  private subscription: Subscription;
-
-  constructor(private authService: AuthService, private loaderService: LoaderService) {}
-
-  ngOnInit(): void {
-    this.subscription = this.authService.user$
-      .subscribe((user) => {
-        this.isAuthenticated = !!user;
-      });
-
-    this.subscription.add(
-      this.loaderService.loaderState
-        .pipe(debounceTime(0)) // Prevent ExpressionChangedAfterItHasBeenCheckedError for now :D TODO: Fix it
-        .subscribe((isLoading) => {
-          this.isLoading = isLoading;
-        })
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+  constructor(private authStore: Store<AuthState>, private appStore: Store<AppState>) {}
 }

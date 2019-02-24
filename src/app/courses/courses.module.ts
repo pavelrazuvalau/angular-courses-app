@@ -7,6 +7,9 @@ import { CourseItemComponent } from './components/course-item/course-item.compon
 import { RouterModule } from '@angular/router';
 import { routes } from './courses.routes';
 
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+
 import {
   MatButtonModule,
   MatInputModule,
@@ -29,6 +32,9 @@ import { EditCoursePageComponent } from './pages/edit-course-page/edit-course-pa
 import { CreateCoursePageComponent } from './pages/create-course-page/create-course-page.component';
 import { CourseResolver } from './resolvers/course.resolver';
 
+import { reducer } from './reducers/courses.reducer';
+import { CoursesEffects } from './effects/courses.effects';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -42,6 +48,8 @@ import { CourseResolver } from './resolvers/course.resolver';
     MatNativeDateModule,
     MatChipsModule,
     RouterModule.forChild(routes),
+    StoreModule.forFeature('courses', reducer),
+    EffectsModule.forFeature([CoursesEffects]),
   ],
   declarations: [
     CourseListPageComponent,

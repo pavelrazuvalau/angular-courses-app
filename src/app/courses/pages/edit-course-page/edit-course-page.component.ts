@@ -1,8 +1,9 @@
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { CourseService } from './../../services/course.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Course } from '../../models/course';
+import { Store } from '@ngrx/store';
+import { CoursesState } from '../../reducers/courses.reducer';
+import { EditCourseAction } from '../../actions/courses.actions';
 
 @Component({
   selector: 'app-edit-course-page',
@@ -12,22 +13,15 @@ import { Course } from '../../models/course';
 export class EditCoursePageComponent implements OnInit {
   course: Course;
 
-  constructor(private courseService: CourseService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+  constructor(private store: Store<CoursesState>,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data['course'];
   }
 
   onSubmit(course: Course) {
-    this.courseService.updateItem(course).subscribe(() => {
-      this.navigateHome();
-    });
-  }
-
-  navigateHome() {
-    this.router.navigate(['/']);
+    this.store.dispatch(new EditCourseAction(course));
   }
 
 }

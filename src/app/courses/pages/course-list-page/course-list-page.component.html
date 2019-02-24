@@ -13,15 +13,17 @@
   </div>
 </section>
 
-<section class="course-list" *ngIf="courses && courses.length; else noData">
-  <app-course-item
-    *ngFor="let course of courses | orderBy:'creationDate'"
-    [course]="course"
-    (edit)="editCourse($event)"
-    (remove)="removeCourse($event)">
-  </app-course-item>
-  <button class="course-list__load-more" mat-raised-button *ngIf="hasMoreCourses" (click)="loadMoreCourses()">Load more</button>
-</section>
+<ng-container *ngIf="courses$ | async as courses; else noData">
+  <section class="course-list" *ngIf="courses.length; else noData">
+    <app-course-item
+      *ngFor="let course of courses | orderBy:'creationDate'"
+      [course]="course"
+      (edit)="editCourse($event)"
+      (remove)="removeCourse($event)">
+    </app-course-item>
+    <button class="course-list__load-more" mat-raised-button *ngIf="hasMoreCourses$ | async" (click)="loadMoreCourses()">Load more</button>
+  </section>
+</ng-container>
 
 <ng-template #noData>
   <div class="no-data">No data. Feel free to add new course</div>

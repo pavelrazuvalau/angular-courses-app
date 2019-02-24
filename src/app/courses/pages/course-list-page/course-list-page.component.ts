@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../../../courses/models/course';
-import { CourseService } from '../../../courses/services/course.service';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
+import { CoursesState, getCourses, getHasMoreCourses } from '../../reducers/courses.reducer';
+import { LoadCoursesAction, LoadMoreCoursesAction, RemoveCourseAction } from '../../actions/courses.actions';
 
 @Component({
   selector: 'app-course-list',
@@ -13,50 +15,35 @@ import { debounceTime, filter } from 'rxjs/operators';
   styleUrls: ['./course-list-page.component.scss']
 })
 export class CourseListPageComponent implements OnInit {
-  courses: Course[] = [];
-  searchCriteria: string;
+  courses$ = this.store.pipe(select(getCourses));
+  hasMoreCourses$ = this.store.pipe(select(getHasMoreCourses));
 
-  isLoading = false;
-  hasMoreCourses = true;
-  currentPage = 0;
+  searchCriteria: string;
 
   private debounceSubject = new Subject<string>();
 
-  constructor(private courseService: CourseService,
+  constructor(private store: Store<CoursesState>,
               private dialog: MatDialog,
               private router: Router) {}
 
   ngOnInit() {
-    this.loadMoreCourses();
+    this.loadCourses();
 
     this.debounceSubject
       .pipe(
         filter((value) => !value.length || value.length >= 3),
         debounceTime(1000)
-      ).subscribe((searchCriteria) => {
-        this.reloadCourses(searchCriteria);
+      ).subscribe(() => {
+        this.loadCourses();
       });
   }
 
-  loadMoreCourses(searchCriteria?: string) {
-    if (!this.isLoading) {
-      this.isLoading = true;
-
-      this.courseService.getList(this.currentPage, searchCriteria).subscribe(({ courses, hasMoreCourses }) => {
-        this.courses = this.courses.concat(courses);
-
-        this.hasMoreCourses = hasMoreCourses;
-
-        this.isLoading = false;
-        this.currentPage++;
-      });
-    }
+  loadCourses() {
+    this.store.dispatch(new LoadCoursesAction({ searchCriteria: this.searchCriteria }));
   }
 
-  reloadCourses(searchCriteria?: string) {
-    this.currentPage = 0;
-    this.courses = [];
-    this.loadMoreCourses(searchCriteria);
+  loadMoreCourses() {
+    this.store.dispatch(new LoadMoreCoursesAction());
   }
 
   editCourse(course: Course) {
@@ -68,9 +55,7 @@ export class CourseListPageComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((isConfirmed) => {
       if (isConfirmed) {
-        this.courseService.removeItem(course).subscribe(() => {
-          this.reloadCourses();
-        });
+        this.store.dispatch(new RemoveCourseAction(course));
       }
     });
   }
