@@ -9,7 +9,6 @@
     </section>
 
     <main class="content-container">
-      <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
       <router-outlet></router-outlet>
     </main>
 
@@ -18,3 +17,5 @@
     </footer>
   </div>
 </perfect-scrollbar>
+
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

@@ -1,15 +1,13 @@
-<ng-container *ngIf="segments$ | async as segments">
-  <mat-toolbar *ngIf="segments.length">
-    <span class="breadcrumbs__item" *ngFor="let segment of segments; let last = last">
-      <a [routerLink]="[ segment.url ]" *ngIf="segment.url">
-        {{ segment.name }}
-      </a>
-      <span *ngIf="!segment.url">
-        {{ segment.name }}
-      </span>
-      <span class="breadcrumbs__item__separator" *ngIf="!last">
-        /
-      </span>
+<mat-toolbar *ngIf="segments && segments.size">
+  <span class="breadcrumbs__item" *ngFor="let segment of segments; let last = last">
+    <a [routerLink]="[ segment.url ]" *ngIf="segment.url">
+      {{ segment.name }}
+    </a>
+    <span *ngIf="!segment.url">
+      {{ segment.name }}
     </span>
-  </mat-toolbar>
-</ng-container>
+    <span class="breadcrumbs__item__separator" *ngIf="!last">
+      /
+    </span>
+  </span>
+</mat-toolbar>

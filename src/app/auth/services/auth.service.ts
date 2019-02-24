@@ -1,26 +1,30 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
-import { of, Observable, BehaviorSubject, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { of, Observable, throwError, ReplaySubject } from 'rxjs';
+import { tap, catchError, switchMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
   private readonly AUTH_URL = 'auth';
 
-  isAuthenticated$ = new BehaviorSubject<boolean>(this.isAuthenticated());
+  user$ = new ReplaySubject<User>(1);
 
   constructor(private http: HttpClient) {}
 
-  login(login: string, password: string): Observable<void | HttpErrorResponse> {
+  init() {
+    this.getUserInfo();
+  }
+
+  login(login: string, password: string): Observable<User | HttpErrorResponse> {
     return this.http.post(`${this.AUTH_URL}/login`, {
       login,
       password
     }).pipe(
-      map((response: any) => {
+      tap((response: any) => {
         localStorage.accessToken = JSON.stringify(response.token);
-        this.isAuthenticated$.next(true);
       }),
+      switchMap(() => this.getUserInfo()),
       catchError((error) => throwError({
         ...error,
         message: error.status === 401 ? 'Incorrect username or password' : error.message
@@ -30,18 +34,22 @@ export class AuthService {
 
   logout(): Observable<any> {
     localStorage.removeItem('accessToken');
-
-    this.isAuthenticated$.next(false);
+    this.user$.next(null);
 
     return of();
   }
 
-  isAuthenticated(): boolean {
-    return !!(this.getLocalStorageItem('accessToken'));
-  }
+  getUserInfo(): Promise<User> {
+    const promise = !!this.getToken()
+      ? this.http.get<User>(`${this.AUTH_URL}/userInfo`)
+          .pipe(catchError(() => of(null))).toPromise()
+      : Promise.resolve(null);
 
-  getUserInfo(): Observable<User> {
-    return this.http.get<User>(`${this.AUTH_URL}/userInfo`);
+    return promise.then((user) => {
+      this.user$.next(user);
+      return user;
+    });
+
   }
 
   getToken(): string {

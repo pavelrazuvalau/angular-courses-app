@@ -7,7 +7,7 @@ import { CourseResolver } from './resolvers/course.resolver';
 export const routes: Routes = [
   {
     path: '',
-    component: CourseListPageComponent
+    component: CourseListPageComponent,
   },
   {
     path: 'new',
