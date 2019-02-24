@@ -1,9 +1,8 @@
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { CourseService } from './../../services/course.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../../models/course';
-import { BreadcrumbsService } from 'src/app/core/services/breadcrumbs.service';
-import { BreadcrumbsSegment } from 'src/app/core/models/breadcrumbs-segment';
 
 @Component({
   selector: 'app-edit-course-page',
@@ -15,23 +14,10 @@ export class EditCoursePageComponent implements OnInit {
 
   constructor(private courseService: CourseService,
               private route: ActivatedRoute,
-              private router: Router,
-              private breadcrumbsService: BreadcrumbsService) { }
+              private router: Router) { }
 
   ngOnInit() {
     this.course = this.route.snapshot.data['course'];
-
-    const segments: BreadcrumbsSegment[] = [];
-    let currentRoute = this.route.snapshot.parent;
-
-    segments.unshift({ name: this.course.name });
-
-    while (currentRoute && currentRoute.data && currentRoute.data.breadcrumb) {
-      segments.unshift(currentRoute.data.breadcrumb);
-      currentRoute = currentRoute.parent;
-    }
-
-    this.breadcrumbsService.updateSegments(segments);
   }
 
   onSubmit(course: Course) {

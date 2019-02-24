@@ -1,11 +1,8 @@
 <section class="course-toolbar">
   <div class="course-toolbar__search">
-    <form autocomplete="off" (submit)="reloadCourses()">
-      <mat-form-field>
-        <input matInput [(ngModel)]="searchCriteria" name="searchCriteria">
-      </mat-form-field>
-      <button type="submit" mat-raised-button>Search</button>
-    </form>
+    <mat-form-field>
+      <input matInput [(ngModel)]="searchCriteria" (ngModelChange)="onSearchCriteriaChange($event)" name="searchCriteria">
+    </mat-form-field>
   </div>
 
   <div class="course-toolbar__add-course">

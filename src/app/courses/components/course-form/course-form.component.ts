@@ -45,7 +45,6 @@ export class CourseFormComponent {
   }
 
   onSubmit(): void {
-    console.log(this.courseForm);
     this.save.emit(this.course);
   }
 

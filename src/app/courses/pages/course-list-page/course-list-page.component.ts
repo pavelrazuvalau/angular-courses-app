@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../../../courses/models/course';
 import { CourseService } from '../../../courses/services/course.service';
-import { BreadcrumbsService } from './../../../core/services/breadcrumbs.service';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BreadcrumbsSegment } from 'src/app/core/models/breadcrumbs-segment';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-course-list',
@@ -20,31 +20,29 @@ export class CourseListPageComponent implements OnInit {
   hasMoreCourses = true;
   currentPage = 0;
 
+  private debounceSubject = new Subject<string>();
+
   constructor(private courseService: CourseService,
-              private breadcrumbsService: BreadcrumbsService,
               private dialog: MatDialog,
-              private router: Router,
-              private route: ActivatedRoute) {}
+              private router: Router) {}
 
   ngOnInit() {
     this.loadMoreCourses();
 
-    const segments: BreadcrumbsSegment[] = [];
-    let currentRoute = this.route.snapshot.parent;
-
-    while (currentRoute && currentRoute.data && currentRoute.data.breadcrumb) {
-      segments.unshift(currentRoute.data.breadcrumb);
-      currentRoute = currentRoute.parent;
-    }
-
-    this.breadcrumbsService.updateSegments(segments);
+    this.debounceSubject
+      .pipe(
+        filter((value) => !value.length || value.length >= 3),
+        debounceTime(1000)
+      ).subscribe((searchCriteria) => {
+        this.reloadCourses(searchCriteria);
+      });
   }
 
-  loadMoreCourses() {
+  loadMoreCourses(searchCriteria?: string) {
     if (!this.isLoading) {
       this.isLoading = true;
 
-      this.courseService.getList(this.currentPage, this.searchCriteria).subscribe(({ courses, hasMoreCourses }) => {
+      this.courseService.getList(this.currentPage, searchCriteria).subscribe(({ courses, hasMoreCourses }) => {
         this.courses = this.courses.concat(courses);
 
         this.hasMoreCourses = hasMoreCourses;
@@ -55,10 +53,10 @@ export class CourseListPageComponent implements OnInit {
     }
   }
 
-  reloadCourses() {
+  reloadCourses(searchCriteria?: string) {
     this.currentPage = 0;
     this.courses = [];
-    this.loadMoreCourses();
+    this.loadMoreCourses(searchCriteria);
   }
 
   editCourse(course: Course) {
@@ -75,5 +73,9 @@ export class CourseListPageComponent implements OnInit {
         });
       }
     });
+  }
+
+  onSearchCriteriaChange(searchSriteria: string) {
+    this.debounceSubject.next(searchSriteria);
   }
 }

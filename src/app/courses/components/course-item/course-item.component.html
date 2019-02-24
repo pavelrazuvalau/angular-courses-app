@@ -1,7 +1,7 @@
 <mat-card class="course-item"
   appCreationDateStatus
   [creationDateString]="course.date"
-  [ngClass]="{ 'course-item--top-rated': course.topRated }">
+  [ngClass]="{ 'course-item--top-rated': course.isTopRated }">
   <section class="course-item__content">
     <header class="card-header">
       <h2 class="card-header__title">

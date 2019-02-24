@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -12,11 +13,12 @@ import { LogoComponent } from './components/logo/logo.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 
-import { BreadcrumbsService } from './services/breadcrumbs.service';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { APIInterceptor } from './interceptors/api.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LoaderInterceptorService } from './interceptors/loader.interceptor';
+import { LoaderService } from './services/loader.service';
 
 const COMPONENTS = [
   HeaderComponent,
@@ -43,7 +45,7 @@ const COMPONENTS = [
     ...COMPONENTS
   ],
   providers: [
-    BreadcrumbsService,
+    LoaderService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: APIInterceptor,
@@ -54,6 +56,11 @@ const COMPONENTS = [
       useClass: AuthInterceptor,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptorService,
+      multi: true
+    }
   ]
 })
 export class CoreModule { }
