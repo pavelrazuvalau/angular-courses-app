@@ -4,7 +4,7 @@
       <app-header></app-header>
     </header>
 
-    <section class="page-breadcrumbs" *ngIf="isAuthenticated">
+    <section class="page-breadcrumbs" *ngIf="isAuthenticated$ | async">
       <app-breadcrumbs></app-breadcrumbs>
     </section>
 
@@ -18,4 +18,4 @@
   </div>
 </perfect-scrollbar>
 
-<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>

@@ -9,5 +9,5 @@
     </mat-form-field>
     <button type="submit" mat-raised-button>Login</button>
   </form>
-  <p class="error-message">{{ errorMessage }}</p>
+  <p class="error-message">{{ errorMessage$ | async }}</p>
 </mat-card>

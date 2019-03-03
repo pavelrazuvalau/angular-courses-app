@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './../../../auth/services/auth.service';
+import { Store, select } from '@ngrx/store';
+
+import { AuthState } from 'src/app/auth/reducers/auth.reducer';
+import { currentUser } from './../../../auth/reducers/auth.reducer';
+import { LogOutAction } from 'src/app/auth/actions/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -8,20 +12,15 @@ import { AuthService } from './../../../auth/services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  user$ = this.authService.user$;
+  user$ = this.store.pipe(select(currentUser));
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router, private store: Store<AuthState>) {}
 
   login() {
-    this.navigateToLoginPage();
+    this.router.navigate(['/login']);
   }
 
   logout() {
-    this.authService.logout();
-    this.navigateToLoginPage();
-  }
-
-  private navigateToLoginPage() {
-    this.router.navigate(['/login']);
+    this.store.dispatch(new LogOutAction());
   }
 }

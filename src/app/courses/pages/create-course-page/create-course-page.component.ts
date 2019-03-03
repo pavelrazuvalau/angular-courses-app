@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { CourseService } from '../../services/course.service';
 import { Course } from '../../models/course';
+import { Store } from '@ngrx/store';
+import { CoursesState } from '../../reducers/courses.reducer';
+import { CreateCourseAction } from '../../actions/courses.actions';
 
 @Component({
   selector: 'app-create-course-page',
@@ -9,15 +10,9 @@ import { Course } from '../../models/course';
   styleUrls: ['./create-course-page.component.scss']
 })
 export class CreateCoursePageComponent {
-  constructor(private courseService: CourseService, private router: Router) { }
+  constructor(private store: Store<CoursesState>) { }
 
   onSubmit(course: Course) {
-    this.courseService.createCourse(course).subscribe(() => {
-      this.navigateHome();
-    });
-  }
-
-  navigateHome() {
-    this.router.navigate(['/']);
+    this.store.dispatch(new CreateCourseAction(course));
   }
 }
