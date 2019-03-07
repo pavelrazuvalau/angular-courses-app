@@ -8,6 +8,7 @@ import { debounceTime, filter } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { CoursesState, getCourses, getHasMoreCourses } from '../../reducers/courses.reducer';
 import { LoadCoursesAction, LoadMoreCoursesAction, RemoveCourseAction } from '../../actions/courses.actions';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-course-list',
@@ -17,8 +18,7 @@ import { LoadCoursesAction, LoadMoreCoursesAction, RemoveCourseAction } from '..
 export class CourseListPageComponent implements OnInit {
   courses$ = this.store.pipe(select(getCourses));
   hasMoreCourses$ = this.store.pipe(select(getHasMoreCourses));
-
-  searchCriteria: string;
+  searchInput = new FormControl();
 
   private debounceSubject = new Subject<string>();
 
@@ -36,10 +36,12 @@ export class CourseListPageComponent implements OnInit {
       ).subscribe(() => {
         this.loadCourses();
       });
+
+    this.searchInput.valueChanges.subscribe((value) => this.debounceSubject.next(value));
   }
 
   loadCourses() {
-    this.store.dispatch(new LoadCoursesAction({ searchCriteria: this.searchCriteria }));
+    this.store.dispatch(new LoadCoursesAction({ searchCriteria: this.searchInput.value }));
   }
 
   loadMoreCourses() {
@@ -58,9 +60,5 @@ export class CourseListPageComponent implements OnInit {
         this.store.dispatch(new RemoveCourseAction(course));
       }
     });
-  }
-
-  onSearchCriteriaChange(searchSriteria: string) {
-    this.debounceSubject.next(searchSriteria);
   }
 }

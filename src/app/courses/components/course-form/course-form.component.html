@@ -1,38 +1,28 @@
 <mat-card>
-  <form autocomplete="off" #courseForm="ngForm" (submit)="courseForm.valid && onSubmit()">
+  <form autocomplete="off" [formGroup]="courseForm" (submit)="onSubmit()">
     <mat-form-field>
-      <input matInput placeholder="Title" name="title" [(ngModel)]="course.name" required>
+      <input matInput formControlName="name" placeholder="Title" name="title">
+      <mat-error *ngIf="courseForm.controls['name'].hasError('required')">Please enter a course title</mat-error>
+      <mat-error *ngIf="courseForm.controls['name'].hasError('maxlength')">Course title is loo long</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput placeholder="Description" name="description" [(ngModel)]="course.description" required></textarea>
+      <textarea matInput formControlName="description" placeholder="Description" name="description"></textarea>
+      <mat-error *ngIf="courseForm.controls['description'].hasError('required')">Please enter a course description</mat-error>
+      <mat-error *ngIf="courseForm.controls['description'].hasError('maxlength')">Course description is loo long</mat-error>
     </mat-form-field>
-    <mat-form-field class="input-small">
-      <input matInput [matDatepicker]="picker" placeholder="Date" name="date" [(ngModel)]="course.date" required>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <div class="duration-input">
-      <mat-form-field class="input-small">
-        <input type="number" matInput placeholder="Duration" name="duration" [(ngModel)]="course.length" required>
-      </mat-form-field>
-      <span *ngIf="course.length">{{ course.length | minutesToTime }}</span>
-    </div>
-    <mat-form-field>
-      <mat-chip-list #chipList>
-        <mat-chip *ngFor="let author of course.authors" [selectable]="true"
-                 [removable]="true" (removed)="removeAuthor(author)">
-          {{ author.firstName }} {{ author.lastName }}
-          <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Authors"
-               [matChipInputFor]="chipList"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               [matChipInputAddOnBlur]="true"
-               (matChipInputTokenEnd)="addAuthor($event)" required>
-      </mat-chip-list>
-    </mat-form-field>
+
+    <app-course-date-input
+      formControlName="date"
+      [errorMatcher]="createCustomErrorStateMatcher('date')"></app-course-date-input>
+    <app-course-duration-input
+      formControlName="length"
+      [errorMatcher]="createCustomErrorStateMatcher('length')"></app-course-duration-input>
+    <app-course-authors-input
+      formControlName="authors"
+      [suggestedAuthors]="suggestedAuthors"
+      [errorMatcher]="createCustomErrorStateMatcher('authors')"></app-course-authors-input>
     <div class="form-actions">
-      <button type="submit" mat-raised-button>Save</button>
+      <button type="submit" mat-raised-button [disabled]="courseForm.invalid">Save</button>
       <button type="button" color="warn" mat-raised-button (click)="onCancel(); $event.preventDefault()">Cancel</button>
     </div>
   </form>

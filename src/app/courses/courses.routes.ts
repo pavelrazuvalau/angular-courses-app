@@ -3,6 +3,7 @@ import { CourseListPageComponent } from './pages/course-list-page/course-list-pa
 import { CreateCoursePageComponent } from './pages/create-course-page/create-course-page.component';
 import { EditCoursePageComponent } from './pages/edit-course-page/edit-course-page.component';
 import { CourseResolver } from './resolvers/course.resolver';
+import { AuthorsResolver } from './resolvers/authors.resolver';
 
 export const routes: Routes = [
   {
@@ -16,13 +17,17 @@ export const routes: Routes = [
       breadcrumb: {
         name: 'Create'
       }
+    },
+    resolve: {
+      authors: AuthorsResolver
     }
   },
   {
     path: ':id',
     component: EditCoursePageComponent,
     resolve: {
-      course: CourseResolver
+      course: CourseResolver,
+      authors: AuthorsResolver
     }
   }
 ];

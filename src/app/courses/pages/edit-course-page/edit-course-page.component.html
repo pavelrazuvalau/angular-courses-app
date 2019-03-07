@@ -1,1 +1,5 @@
-<app-course-form [course]="course" (save)="onSubmit($event)" (cancel)="navigateHome()"></app-course-form>
+<app-course-form
+  [course]="course"
+  [suggestedAuthors]="authors"
+  (save)="onSubmit($event)"
+  (cancel)="onCancel()"></app-course-form>
