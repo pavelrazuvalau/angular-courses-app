@@ -1,4 +1,4 @@
-import { CourseResponse } from './../models/course';
+import { CourseResponse, CourseAuthor } from './../models/course';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { Course } from '../models/course';
 @Injectable()
 export class CourseService {
   private readonly COURSES_URL = 'courses';
+  private readonly AUTHORS_URL = 'authors';
   private readonly LIMIT = 10;
 
   constructor(private http: HttpClient) {}
@@ -39,5 +40,17 @@ export class CourseService {
 
   removeItem(course: Course): Observable<any> {
     return this.http.delete(`${this.COURSES_URL}/${course.id}`);
+  }
+
+  getAuthors(): Observable<CourseAuthor[]> {
+    return this.http.get<any[]>(`${this.AUTHORS_URL}`).pipe(
+      map((response) => response.map((item) => {
+        const fullName = item.name.split(' ');
+        return {
+          firstName: fullName[0],
+          lastName: fullName[1]
+        };
+      }))
+    );
   }
 }

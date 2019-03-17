@@ -1,7 +1,7 @@
 <section class="course-toolbar">
   <div class="course-toolbar__search">
     <mat-form-field>
-      <input matInput [(ngModel)]="searchCriteria" (ngModelChange)="onSearchCriteriaChange($event)" name="searchCriteria">
+      <input matInput [formControl]="searchInput" name="searchCriteria">
     </mat-form-field>
   </div>
 
