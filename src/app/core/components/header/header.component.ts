@@ -5,6 +5,8 @@ import { Store, select } from '@ngrx/store';
 import { AuthState } from 'src/app/auth/reducers/auth.reducer';
 import { currentUser } from './../../../auth/reducers/auth.reducer';
 import { LogOutAction } from 'src/app/auth/actions/auth.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -13,8 +15,11 @@ import { LogOutAction } from 'src/app/auth/actions/auth.actions';
 })
 export class HeaderComponent {
   user$ = this.store.pipe(select(currentUser));
+  langFormControl = new FormControl();
 
-  constructor(private router: Router, private store: Store<AuthState>) {}
+  constructor(private router: Router,
+              private store: Store<AuthState>,
+              private translateService: TranslateService) {}
 
   login() {
     this.router.navigate(['/login']);
@@ -22,5 +27,9 @@ export class HeaderComponent {
 
   logout() {
     this.store.dispatch(new LogOutAction());
+  }
+
+  public changeLang(lang: string) {
+    this.translateService.use(lang);
   }
 }

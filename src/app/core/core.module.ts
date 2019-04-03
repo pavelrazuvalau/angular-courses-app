@@ -5,7 +5,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule, MatProgressSpinnerModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatProgressSpinnerModule,
+  MatInputModule,
+  MatSelectModule
+} from '@angular/material';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -19,6 +24,8 @@ import { APIInterceptor } from './interceptors/api.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LoaderInterceptorService } from './interceptors/loader.interceptor';
 import { LoaderService } from './services/loader.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 const COMPONENTS = [
   HeaderComponent,
@@ -33,10 +40,14 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     RouterModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
     MatButtonModule,
     MatToolbarModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    TranslateModule.forChild({}),
   ],
   declarations: [
     ...COMPONENTS,

@@ -1,9 +1,9 @@
 <mat-toolbar *ngIf="segments && segments.size">
   <span class="breadcrumbs__item" *ngFor="let segment of segments; let last = last">
-    <a [routerLink]="[ segment.url ]" *ngIf="segment.url">
+    <a [routerLink]="[ segment.url ]" *ngIf="segment.url" translate>
       {{ segment.name }}
     </a>
-    <span *ngIf="!segment.url">
+    <span *ngIf="!segment.url" translate>
       {{ segment.name }}
     </span>
     <span class="breadcrumbs__item__separator" *ngIf="!last">

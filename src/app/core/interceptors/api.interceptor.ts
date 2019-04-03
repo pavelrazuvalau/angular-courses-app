@@ -11,10 +11,12 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class APIInterceptor implements HttpInterceptor {
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const apiReq = req.clone({
-      url: `${environment.API_URL}/${req.url}`
-    });
-
-    return next.handle(apiReq);
+    return next.handle(
+      !req.url.match(/assets/)
+        ? req.clone({
+          url: `${environment.API_URL}/${req.url}`
+        })
+        : req
+    );
   }
 }

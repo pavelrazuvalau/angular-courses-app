@@ -39,6 +39,7 @@ import { CoursesEffects } from './effects/courses.effects';
 import { CourseDateInputComponent } from './components/course-form/course-date-input/course-date-input.component';
 import { CourseDurationInputComponent } from './components/course-form/course-duration-input/course-duration-input.component';
 import { CourseAuthorsInputComponent } from './components/course-form/course-authors-input/course-authors-input.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import { CourseAuthorsInputComponent } from './components/course-form/course-aut
     MatNativeDateModule,
     MatChipsModule,
     RouterModule.forChild(routes),
+    TranslateModule.forChild({}),
     StoreModule.forFeature('courses', reducer),
     EffectsModule.forFeature([CoursesEffects]),
   ],
