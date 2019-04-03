@@ -5,10 +5,14 @@
       (blur)="onTouched()"
       [errorStateMatcher]="errorMatcher"
       formControlName="length"
-      placeholder="Duration"
+      placeholder="{{ 'Duration' | translate }}"
       name="duration">
-      <mat-error *ngIf="errorMatcher.hasError('required')">Please enter a duration</mat-error>
-      <mat-error *ngIf="errorMatcher.hasError('notInteger')">Duration value is invalid</mat-error>
+      <mat-error *ngIf="errorMatcher.hasError('required')">
+        <span translate>Please enter a duration</span>
+      </mat-error>
+      <mat-error *ngIf="errorMatcher.hasError('notInteger')">
+        <span translate>Duration value is invalid</span>
+      </mat-error>
   </mat-form-field>
-  <span *ngIf="form.value.length">{{ form.value.length | minutesToTime }}</span>
+  <span class="converted-duration" *ngIf="form.value.length">{{ form.value.length | minutesToTime }}</span>
 </div>
