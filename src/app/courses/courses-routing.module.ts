@@ -1,14 +1,15 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { CourseListPageComponent } from './pages/course-list-page/course-list-page.component';
 import { CreateCoursePageComponent } from './pages/create-course-page/create-course-page.component';
+import { AuthorsResolver } from './resolvers/authors.resolver';
 import { EditCoursePageComponent } from './pages/edit-course-page/edit-course-page.component';
 import { CourseResolver } from './resolvers/course.resolver';
-import { AuthorsResolver } from './resolvers/authors.resolver';
 
-export const routes: Routes = [
+const routes: Routes = [
   {
     path: '',
-    component: CourseListPageComponent,
+    component: CourseListPageComponent
   },
   {
     path: 'new',
@@ -31,3 +32,9 @@ export const routes: Routes = [
     }
   }
 ];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class CoursesRoutingModule {}

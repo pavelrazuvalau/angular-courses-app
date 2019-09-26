@@ -4,9 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CourseListPageComponent } from './pages/course-list-page/course-list-page.component';
 import { CourseItemComponent } from './components/course-item/course-item.component';
 
-import { RouterModule } from '@angular/router';
-import { routes } from './courses.routes';
-
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
@@ -40,6 +37,7 @@ import { CourseDateInputComponent } from './components/course-form/course-date-i
 import { CourseDurationInputComponent } from './components/course-form/course-duration-input/course-duration-input.component';
 import { CourseAuthorsInputComponent } from './components/course-form/course-authors-input/course-authors-input.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { CoursesRoutingModule } from './courses-routing.module';
 
 @NgModule({
   imports: [
@@ -54,7 +52,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatChipsModule,
-    RouterModule.forChild(routes),
+    CoursesRoutingModule,
     TranslateModule.forChild({}),
     StoreModule.forFeature('courses', reducer),
     EffectsModule.forFeature([CoursesEffects]),
