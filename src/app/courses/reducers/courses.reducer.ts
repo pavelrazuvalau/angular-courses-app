@@ -75,7 +75,7 @@ export function reducer(state = initialState, action: CoursesAction) {
   }
 }
 
-export const coursesStateSelector = createFeatureSelector('courses');
+export const coursesStateSelector = createFeatureSelector<CoursesState>('courses');
 export const getCourses = createSelector(coursesStateSelector, (state: CoursesState) => state.courses);
 export const getSearchCriteria = createSelector(coursesStateSelector, (state: CoursesState) => state.searchCriteria);
 export const getHasMoreCourses = createSelector(coursesStateSelector, (state: CoursesState) => state.hasMoreCourses);

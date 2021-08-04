@@ -40,7 +40,7 @@ export class SetIsAuthenticatedAction implements Action {
 export class SetUserAction implements Action {
   public readonly type = SET_USER_ACTION;
 
-  constructor(public payload: User) {}
+  constructor(public payload: User | null) {}
 }
 
 export type AuthAction =

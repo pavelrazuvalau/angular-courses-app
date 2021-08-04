@@ -22,13 +22,13 @@ export class LoadMoreCoursesAction implements Action {
 export class SetCoursesAction implements Action {
   public readonly type = SET_COURSES_ACTION;
 
-  constructor(public payload: CourseResponse) {}
+  constructor(public payload: CourseResponse | null) {}
 }
 
 export class AppendCoursesAction implements Action {
   public readonly type = APPEND_COURSES_ACTION;
 
-  constructor(public payload: CourseResponse) {}
+  constructor(public payload: CourseResponse | null) {}
 }
 
 export class CreateCourseAction implements Action {

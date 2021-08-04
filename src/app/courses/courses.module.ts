@@ -7,17 +7,15 @@ import { CourseItemComponent } from './components/course-item/course-item.compon
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import {
-  MatButtonModule,
-  MatInputModule,
-  MatCardModule,
-  MatIconModule,
-  MatDialogModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatChipsModule,
-  MatAutocompleteModule
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { MinutesToTimePipe } from './pipes/minutes-to-time.pipe';
 import { CreationDateStatusDirective } from './directives/creation-date-status.directive';
@@ -72,12 +70,7 @@ import { CoursesRoutingModule } from './courses-routing.module';
     CourseDurationInputComponent,
     CourseAuthorsInputComponent,
   ],
-  providers: [
-    CourseService,
-    CourseResolver,
-    AuthorsResolver,
-    FilterByPipe
-  ],
-  entryComponents: [ConfirmationDialogComponent]
+  providers: [CourseService, CourseResolver, AuthorsResolver, FilterByPipe],
+  entryComponents: [ConfirmationDialogComponent],
 })
-export class CoursesModule { }
+export class CoursesModule {}

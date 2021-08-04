@@ -25,4 +25,4 @@ export function reducer(state = initialState, action: AppAction) {
   }
 }
 
-export const appStateSelector = createFeatureSelector('app');
+export const appStateSelector = createFeatureSelector<AppState>('app');

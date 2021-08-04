@@ -6,20 +6,26 @@ import { NotFoundPageComponent } from './core/pages/not-found-page/not-found-pag
 const routes: Route[] = [
   {
     path: 'courses',
-    loadChildren: './courses/courses.module#CoursesModule',
+    loadChildren: () =>
+      import('./courses/courses.module').then((m) => m.CoursesModule),
     canLoad: [AuthGuard],
     canActivate: [AuthGuard],
     data: {
-      breadcrumb: { name: 'Courses', url: '/courses' }
-    }
+      breadcrumb: { name: 'Courses', url: '/courses' },
+    },
   },
-  { path: 'login', loadChildren: './login/login.module#LoginModule' },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginModule),
+  },
+
   { path: '', redirectTo: 'courses', pathMatch: 'full' },
-  { path: '**', component: NotFoundPageComponent }
+  { path: '**', component: NotFoundPageComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

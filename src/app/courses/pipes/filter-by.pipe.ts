@@ -3,9 +3,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'filterBy'
 })
-export class FilterByPipe<T> implements PipeTransform {
+export class FilterByPipe implements PipeTransform {
 
-  transform(items: T[], field: string, searchCriteria: string): any {
+  transform(items: any[], field: string, searchCriteria: string): any {
     return searchCriteria ? items.filter((item) => item[field].toString().toLowerCase().includes(searchCriteria)) : items;
   }
 

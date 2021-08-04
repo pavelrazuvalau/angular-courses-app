@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 import { Course, CourseAuthor } from '../../models/course';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';

@@ -12,7 +12,7 @@ export abstract class SubForm implements ControlValueAccessor, Validator {
   form: FormGroup;
 
   onTouched: () => void;
-  onChanged: (value) => any;
+  onChanged: (value: any) => any;
 
   writeValue(value: any): void {
     this.form.patchValue(value, {

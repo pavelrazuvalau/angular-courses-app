@@ -50,7 +50,7 @@ const createTranslateLoader = (http: HttpClient) => (
     AppRoutingModule,
     StoreModule.forRoot({ app: appReducer }, { metaReducers }),
     EffectsModule.forRoot([]),
-    StoreRouterConnectingModule,
+    StoreRouterConnectingModule.forRoot(),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     PerfectScrollbarModule,
     BrowserAnimationsModule,

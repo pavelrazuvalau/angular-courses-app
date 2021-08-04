@@ -10,8 +10,8 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface AuthState {
   isAuthenticated: boolean;
-  currentUser: User;
-  loginErrorMessage: string;
+  currentUser: User | null;
+  loginErrorMessage: string | null;
 }
 
 export const initialState: AuthState = {
@@ -56,7 +56,7 @@ export function reducer(state = initialState, action: AuthAction) {
   }
 }
 
-const authStateSelector = createFeatureSelector('auth');
+const authStateSelector = createFeatureSelector<AuthState>('auth');
 
 export const isAuthenticated = createSelector(authStateSelector, (state: AuthState) => state.isAuthenticated);
 export const currentUser = createSelector(authStateSelector, (state: AuthState) => state.currentUser);

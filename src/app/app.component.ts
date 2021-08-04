@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
     select(appStateSelector),
     // Still haven't fixed it. TODO: find a way of not spaming loading action or not use it per each request at all
     // Instead I'd listen NavigationEnd event as previously and use isLoading boolean per store to indicate the loading process
-    debounceTime(0),
+    debounceTime<AppState>(0),
     map((state: AppState) => state.isLoading)
   );
 

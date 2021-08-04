@@ -10,7 +10,7 @@ import {
 import {
   MatAutocompleteSelectedEvent,
   MatAutocomplete
-} from '@angular/material';
+} from '@angular/material/autocomplete';
 
 import { SubForm } from '../sub-form/sub-form';
 import { CourseAuthor } from 'src/app/courses/models/course';
@@ -91,11 +91,11 @@ export class CourseAuthorsInputComponent extends SubForm implements OnInit {
     }));
   }
 
-  private filter(value: string): CourseAuthor[] {
+  private filter(value: string | null): CourseAuthor[] {
     return value
       ? this.suggestedAuthors
           .filter(
-            (author) => `${author.firstName.toLowerCase()} ${author.lastName.toLowerCase()}`
+            (author) => `${author.firstName.toLowerCase()} ${author.lastName?.toLowerCase()}`
               .includes(value.toLowerCase()) && !this.isAuthorSelected(author)
           )
       : this.suggestedAuthors
@@ -107,7 +107,7 @@ export class CourseAuthorsInputComponent extends SubForm implements OnInit {
   private isAuthorSelected(author: CourseAuthor): boolean {
     return !!this.form.value.authors
       .find(
-        ({ firstName, lastName }) => author.firstName === firstName && author.lastName === lastName
+        ({ firstName, lastName }: CourseAuthor) => author.firstName === firstName && author.lastName === lastName
       );
   }
 }

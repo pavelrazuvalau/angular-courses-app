@@ -5,12 +5,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  MatCardModule,
-  MatProgressSpinnerModule,
-  MatInputModule,
-  MatSelectModule
-} from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -49,12 +47,8 @@ const COMPONENTS = [
     MatProgressSpinnerModule,
     TranslateModule.forChild({}),
   ],
-  declarations: [
-    ...COMPONENTS,
-  ],
-  exports: [
-    ...COMPONENTS
-  ],
+  declarations: [...COMPONENTS],
+  exports: [...COMPONENTS],
   providers: [
     LoaderService,
     {
@@ -70,8 +64,8 @@ const COMPONENTS = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptorService,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class CoreModule { }
+export class CoreModule {}

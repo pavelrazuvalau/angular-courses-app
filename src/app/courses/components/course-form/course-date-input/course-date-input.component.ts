@@ -5,7 +5,7 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { SubForm } from '../sub-form/sub-form';
-import { MAT_DATE_LOCALE } from '@angular/material';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-course-date-input',

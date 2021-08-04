@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../../../courses/models/course';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
